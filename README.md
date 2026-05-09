@@ -87,6 +87,7 @@ Use one of these prompts:
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Discovery and validation](docs/discovery-and-validation.md)
 - [Human vs AI boundaries](docs/human-vs-ai-boundaries.md)
 - [Folder structure](docs/folder-structure.md)
 - [Claude Code setup](docs/claude-code.md)
@@ -94,6 +95,19 @@ Use one of these prompts:
 - [OpenClaw setup](docs/openclaw.md)
 - [Ollama embeddings](docs/ollama-embeddings.md)
 - [Maintenance](docs/maintenance.md)
+- [Shared Ollama for agents](docs/shared-ollama-for-agents.md)
+- [Add Codex to existing vault](docs/add-codex-to-existing-vault.md)
+- [Add Claude Code to existing vault](docs/add-claude-to-existing-vault.md)
+
+
+## Version 2: multiple AI workbenches
+
+If you already have one AI workbench (for example `_OpenClaw/`, `AI/`, or another existing folder) and want to add another agent such as Claude Code or Codex, see:
+
+- [Multi-agent workbenches](docs/multi-agent-workbenches.md)
+- [Add Claude Code to an existing vault](docs/add-claude-to-existing-vault.md)
+- [Add Codex to an existing vault](docs/add-codex-to-existing-vault.md)
+- [Shared Ollama for multiple agents](docs/shared-ollama-for-agents.md)
 
 ## License
 
