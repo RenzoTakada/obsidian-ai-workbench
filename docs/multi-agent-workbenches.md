@@ -108,6 +108,8 @@ Add Claude Code:
   _Claude/
 ```
 
+Then create a command such as `claude-brain` so Claude Code always starts inside `_Claude/`; see [Claude Brain Command](claude-brain-command.md).
+
 Add Codex:
 
 ```text

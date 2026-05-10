@@ -25,3 +25,9 @@ You may produce drafts, analysis, plans, and summaries, but they belong inside `
 - Decisions: `Decisions/`
 - Templates: `Templates/`
 - Maintenance: `Maintenance/`
+
+## Recommended launch command
+
+If the human created a wrapper such as `claude-brain`, prefer starting Claude Code with that command so the working directory is always this `_Claude/` workbench.
+
+Starting Claude Code from unrelated folders may create separate internal Claude project memories under `~/.claude/projects/...`.

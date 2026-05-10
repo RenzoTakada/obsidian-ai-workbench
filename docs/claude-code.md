@@ -4,7 +4,9 @@ Claude Code can work well with Obsidian because Obsidian notes are local Markdow
 
 ## Recommended setup
 
-Use `_AI/` as Claude's main working directory.
+Use `_AI/` or `_Claude/` as Claude's main working directory. For multi-agent vaults, prefer `_Claude/`.
+
+To avoid accidentally starting Claude Code from unrelated project folders, create a dedicated command. See [Claude Brain Command](claude-brain-command.md).
 
 ```text
 MyVault/

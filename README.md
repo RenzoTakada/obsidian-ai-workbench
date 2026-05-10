@@ -91,6 +91,7 @@ Use one of these prompts:
 - [Human vs AI boundaries](docs/human-vs-ai-boundaries.md)
 - [Folder structure](docs/folder-structure.md)
 - [Claude Code setup](docs/claude-code.md)
+- [Claude brain command](docs/claude-brain-command.md)
 - [Codex setup](docs/codex.md)
 - [OpenClaw setup](docs/openclaw.md)
 - [Ollama embeddings](docs/ollama-embeddings.md)

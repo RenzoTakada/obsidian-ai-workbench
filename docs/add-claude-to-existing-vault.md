@@ -35,6 +35,15 @@ cp templates/claude-code/_Claude/CLAUDE.md an existing Obsidian vault/_Claude/CL
 
 Use `_Claude/` as Claude Code's working directory when you want Claude to operate from its own workbench.
 
+Recommended command:
+
+```bash
+/path/to/obsidian-ai-workbench/scripts/create-claude-brain-command.sh "<vault-path>/_Claude" claude-brain
+claude-brain
+```
+
+See [Claude Brain Command](claude-brain-command.md).
+
 If you run Claude Code from the vault root, make sure `CLAUDE.md` clearly tells it that only `_Claude/` is its workbench and everything else requires authorization.
 
 ## Boundary
