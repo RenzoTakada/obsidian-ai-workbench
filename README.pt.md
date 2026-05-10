@@ -132,25 +132,31 @@ openclaw-brain    # abre o OpenClaw dentro do seu workbench
 ```
 SeuVault/
   _Claude/
-    CLAUDE.md                    ← configuração com auto-bootstrap
+    CLAUDE.md                    ← configuração com auto-bootstrap de memória
     Memory/
       MEMORY.md                  ← índice de memória (pré-preenchido)
       user_profile.md            ← seu nome, projetos, preferências
       project_vault_setup.md     ← caminhos e estrutura do vault
-    Sessions/
-    Outputs/
-    Specs/
-    Decisions/
-    Templates/
-    Logs/
-    Maintenance/
+    Sessions/                    ← notas de cada sessão
+    Outputs/                     ← rascunhos e entregáveis da IA
+    Specs/                       ← planos e especificações
+    Decisions/                   ← decisões e racional
+    Templates/                   ← templates reutilizáveis (revisão de memória, etc.)
+    Logs/                        ← log de ações por sessão
+    Maintenance/                 ← rotinas de revisão e limpeza da memória
+    Safety/                      ← regras de segurança, comandos perigosos, caminhos sensíveis
+    Archive/                     ← memórias arquivadas e contextos antigos
+    Skills/
+    Projects/
+    Briefings/
+    Inbox/
   _Codex/                        ← mesma estrutura se Codex instalado
   _OpenClaw/                     ← mesma estrutura se OpenClaw instalado
 
-~/.local/bin/claude-brain
+~/.local/bin/claude-brain        ← comando de atalho
 ~/.local/bin/codex-brain
 ~/.local/bin/openclaw-brain
-~/.claude/CLAUDE.md              ← atualizado com o caminho do workbench
+~/.claude/CLAUDE.md              ← atualizado com o caminho do workbench (só Claude)
 ```
 
 ---

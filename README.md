@@ -137,13 +137,19 @@ YourVault/
       MEMORY.md                  ← memory index (pre-filled)
       user_profile.md            ← your name, projects, preferences
       project_vault_setup.md     ← vault paths and structure
-    Sessions/
-    Outputs/
-    Specs/
-    Decisions/
-    Templates/
-    Logs/
-    Maintenance/
+    Sessions/                    ← notes from each session
+    Outputs/                     ← AI-generated drafts and deliverables
+    Specs/                       ← plans and specifications
+    Decisions/                   ← decisions and rationale
+    Templates/                   ← reusable templates (memory review, etc.)
+    Logs/                        ← session action logs
+    Maintenance/                 ← memory review and cleanup routines
+    Safety/                      ← security rules, dangerous commands, sensitive paths
+    Archive/                     ← archived memory and past contexts
+    Skills/
+    Projects/
+    Briefings/
+    Inbox/
   _Codex/                        ← same structure if Codex installed
   _OpenClaw/                     ← same structure if OpenClaw installed
 
