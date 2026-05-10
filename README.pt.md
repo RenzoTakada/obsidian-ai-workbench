@@ -169,6 +169,22 @@ A IA é bibliotecária, revisora e multiplicadora — não é a autora do seu se
 
 ---
 
+## Segurança e manutenção da memória
+
+Cada agente tem sua própria área de trabalho (`_Claude/`, `_Codex/`, `_OpenClaw/`) e não deve alterar suas notas sem autorização explícita.
+
+- **Isolamento**: cada agente opera exclusivamente na sua pasta. Suas notas não são tocadas sem autorização.
+- **Memória revisada periodicamente**: use "health check" ou "faça manutenção da memória" para revisar. A IA gera uma proposta — você confirma antes de qualquer alteração.
+- **Limpeza nunca é automática**: nenhum arquivo é apagado ou movido sem confirmação explícita.
+- **Logs**: ações relevantes são registradas em `_AgentFolder/Logs/`.
+- **Comandos perigosos**: qualquer comando destrutivo exige confirmação explícita.
+- **Dados sensíveis não são versionados**: tokens, senhas e credenciais nunca devem ser commitados.
+
+Documentação completa: [`docs/security-model.md`](docs/security-model.md)
+
+
+---
+
 ## Só um agente?
 
 Se você usa apenas uma ferramenta de IA, veja a [branch one-brain](../../tree/one-brain) — setup mais simples com uma única pasta `_AI/`.

@@ -28,3 +28,26 @@ Do not replace the human's thinking.
 - Durable AI memory: `_AI/Memory/`
 - Decisions: `_AI/Decisions/`
 - Specs/plans: `_AI/Specs/`
+- Archived memory: `_AI/Archive/`
+
+## Security rules
+
+Full rules: `_AI/Safety/SECURITY_RULES.md` | Dangerous commands: `_AI/Safety/DANGEROUS_COMMANDS.md` | Sensitive paths: `_AI/Safety/SENSITIVE_PATHS.md`
+
+1. Never edit or delete files outside `_AI/` without explicit confirmation.
+2. Never run destructive commands without confirmation (rm -rf, git reset --hard, DROP, etc.).
+3. Never access sensitive paths (~/.ssh, ~/.aws, .env, etc.) without direct request.
+4. Never commit tokens, passwords, or secrets.
+5. Never make automatic commits.
+6. Never delete or modify memory automatically — always propose first in `_AI/Outputs/`.
+7. When in doubt: ask for confirmation.
+8. Log relevant actions in `_AI/Logs/`.
+
+## Memory maintenance
+
+When asked to "health check", "memory review", "clean the context", or similar:
+1. Read all files in `_AI/Memory/` and linked files
+2. Use template `_AI/Templates/memory-review-template.md`
+3. Generate proposal in `_AI/Outputs/memory-health-YYYY-MM-DD.md`
+4. Present the summary — do not apply changes automatically
+5. Wait for explicit confirmation

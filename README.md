@@ -169,6 +169,22 @@ The AI is a librarian, reviewer, and multiplier — not the author of your secon
 
 ---
 
+## Safety and memory maintenance
+
+Each agent has its own workspace (`_Claude/`, `_Codex/`, `_OpenClaw/`) and must not modify your notes without explicit authorization.
+
+- **Isolation**: each agent operates exclusively in its own folder. Your notes are not touched without authorization.
+- **Memory reviewed periodically**: use "health check" or "memory review" to inspect. The AI generates a proposal — you confirm before any change.
+- **Cleanup is never automatic**: no file is deleted or moved without explicit confirmation.
+- **Logs**: relevant actions are recorded in `_AgentFolder/Logs/`.
+- **Dangerous commands**: any destructive command requires explicit confirmation.
+- **Sensitive data is not versioned**: tokens, passwords, and credentials must never be committed.
+
+Full documentation: [`docs/security-model.md`](docs/security-model.md)
+
+
+---
+
 ## Only one AI agent?
 
 If you only use one AI tool, see the [one-brain branch](../../tree/one-brain) — simpler setup with a single `_AI/` folder.

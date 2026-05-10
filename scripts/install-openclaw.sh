@@ -53,7 +53,7 @@ TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
 step "Creating _OpenClaw/ structure"
-for d in Memory Sessions Outputs Logs Specs Decisions Maintenance Skills Projects Briefings; do
+for d in Memory Sessions Outputs Logs Specs Decisions Maintenance Safety Skills Projects Briefings Archive; do
   mkdir -p "$BRAIN/$d"
 done
 ok "Folders created"
@@ -128,6 +128,14 @@ MEM
 [ ! -f "$BRAIN/Memory/vault_setup.md" ] && printf -- "---\ntype: project\ncreated: %s\n---\n\nVault: \`%s\`\nWorkbench: \`%s\`\n\nOutside \`_OpenClaw/\`: ask before reading or editing.\n" "$TODAY" "$VAULT" "$BRAIN" > "$BRAIN/Memory/vault_setup.md"
 
 ok "Config files created"
+
+# ── Safety / Maintenance / Archive ────────────────────────────────────────────
+step "Creating Safety/, Maintenance/, Archive/ files"
+[ ! -f "$BRAIN/Safety/SECURITY_RULES.md" ] && printf "# Security Rules\nLeast privilege. When in doubt, ask for confirmation.\nFree inside _OpenClaw/. Outside: ask and show summary.\nNever: edit outside _OpenClaw/ without confirmation, expose secrets, auto-commit, auto-delete memory.\n" > "$BRAIN/Safety/SECURITY_RULES.md"
+[ ! -f "$BRAIN/Logs/README.md" ] && printf "# Logs — YYYY-MM-DD.md\nLog: memory changes, actions outside _OpenClaw/ (authorized), high-impact commands.\n" > "$BRAIN/Logs/README.md"
+[ ! -f "$BRAIN/Archive/README.md" ] && printf "# Archive — YYYY-MM-DD_original-name.md\nNo file moved here automatically. Requires proposal in Outputs/ and confirmation.\n" > "$BRAIN/Archive/README.md"
+ok "Safety/, Maintenance/, Archive/ files created"
+
 
 # ── Configure OpenClaw workspace ──────────────────────────────────────────────
 step "Configuring OpenClaw"
