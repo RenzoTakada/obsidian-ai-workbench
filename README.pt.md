@@ -6,53 +6,108 @@
 
 ---
 
-## O problema que isso resolve
+## O que é isso?
 
-Quando você começa a usar uma IA com o Obsidian, duas coisas acontecem:
+**Obsidian** é um aplicativo de notas que salva tudo em arquivos Markdown no seu computador — sem nuvem, sem lock-in. Muitas pessoas usam como segundo cérebro: guardam ideias, estudos, projetos e decisões de forma organizada e conectada.
 
-1. **O vault fica poluído** — notas geradas pela IA se misturam com o seu pensamento, e você perde o controle do que é seu.
-2. **A IA esquece tudo** — toda sessão começa do zero, mesmo que você já tenha trabalhado junto por meses.
+**Claude Code, Codex e OpenClaw** são assistentes de IA que rodam no seu terminal. Eles leem e escrevem arquivos, executam código, pesquisam, analisam — e se você souber configurar, podem trabalhar diretamente dentro do seu vault do Obsidian.
 
-Este projeto resolve os dois.
-
----
-
-## A ideia
-
-Seu vault no Obsidian tem duas zonas bem definidas:
-
-```
-Suas notas          ← onde você pensa
-  └── _AI/          ← onde a IA trabalha
-```
-
-A IA tem seu próprio workbench isolado dentro do vault. Ela não toca nas suas notas sem autorização. E como o workbench vive dentro do vault, tudo persiste entre as sessões.
-
-A inovação principal é o **auto-bootstrap**: uma diretiva dentro do arquivo de configuração do agente (`CLAUDE.md` ou `AGENTS.md`) que força o agente a ler silenciosamente seus arquivos de memória antes da primeira resposta de cada sessão. Você nunca mais precisa dizer "lembre quem eu sou".
+**Este projeto** é o template que conecta os dois de forma correta.
 
 ---
 
-## O que você precisa
+## Por que usar IA com Obsidian?
 
-| Ferramenta | Obrigatório | Propósito |
-|---|---|---|
-| [Obsidian](https://obsidian.md) | Sim | Seu vault de conhecimento pessoal |
-| Uma das opções abaixo | Sim | Seu assistente de IA |
-| [Ollama](https://ollama.ai) | Opcional | Busca semântica local na memória |
+Imagine ter um assistente que:
 
-Escolha seu agente de IA:
+- Lê suas notas e entende o contexto do seu trabalho
+- Pesquisa, resume e produz rascunhos baseados no que você já sabe
+- Lembra dos seus projetos, preferências e decisões entre sessões
+- Organiza outputs e logs no seu vault, sem bagunçar suas notas
 
-| Agente | Instalação |
+Isso é o que você ganha quando IA e Obsidian trabalham juntos do jeito certo.
+
+---
+
+## O problema — e por que a maioria faz errado
+
+Quando as pessoas tentam usar IA com Obsidian sem uma estrutura, duas coisas acontecem:
+
+**1. O vault fica poluído**
+A IA começa a gerar notas, resumos, rascunhos — e tudo isso se mistura com as suas próprias notas. Você perde o controle do que é seu e do que foi gerado. Seu segundo cérebro vira um depósito de conteúdo de IA.
+
+**2. A IA esquece tudo**
+Toda vez que você abre uma nova sessão, precisa explicar do zero quem você é, o que está fazendo, quais são seus projetos. Sem memória persistente, a IA nunca aprende sobre você.
+
+---
+
+## O que este projeto resolve
+
+### Isolamento — cada um no seu espaço
+
+Suas notas ficam intactas. A IA trabalha em uma pasta separada (`_AI/`) dentro do vault:
+
+```
+SeuVault/
+  Suas notas...       ← onde você pensa
+  └── _AI/            ← onde a IA trabalha
+```
+
+A IA não toca no que é seu a menos que você autorize explicitamente.
+
+### Memória persistente — ela sempre lembra de você
+
+O instalador cria arquivos de memória pré-preenchidos com seu nome, projetos e preferências. E o arquivo de configuração do agente contém uma diretiva especial:
+
+```
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read _AI/Memory/MEMORY.md
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+```
+
+Isso força o agente a carregar a memória silenciosamente antes de responder. Você nunca mais precisa dizer "lembre quem eu sou" — ele simplesmente já sabe.
+
+### Instalação em um comando
+
+Sem configuração manual. Um script faz tudo: cria as pastas, escreve os arquivos de configuração, preenche a memória inicial e instala um comando de atalho.
+
+---
+
+## O que você ganha
+
+| Antes | Depois |
 |---|---|
-| [Claude Code CLI](https://claude.ai/code) | `brew install claude` ou baixar |
-| [OpenAI Codex CLI](https://github.com/openai/codex) | `npm install -g @openai/codex` |
+| IA esquece tudo a cada sessão | IA lembra seus projetos e preferências automaticamente |
+| Notas da IA misturadas com as suas | Vault limpo — IA isolada em `_AI/` |
+| Configuração manual e trabalhosa | Um comando instala tudo |
+| Precisa explicar o contexto toda vez | Contexto carregado automaticamente |
+
+---
+
+## O que você precisa instalar
+
+| Ferramenta | Obrigatório | Como instalar |
+|---|---|---|
+| [Obsidian](https://obsidian.md) | Sim | Download em obsidian.md |
+| Um dos agentes abaixo | Sim | Veja as opções |
+| [Ollama](https://ollama.ai) | Opcional | Para busca semântica local na memória |
+
+**Escolha seu agente de IA:**
+
+| Agente | Como instalar |
+|---|---|
+| [Claude Code](https://claude.ai/code) | Download em claude.ai/code |
+| [OpenAI Codex](https://github.com/openai/codex) | `npm install -g @openai/codex` |
 | [OpenClaw](https://openclaw.ai) | Veja openclaw.ai |
 
 ---
 
 ## Instalação
 
-Escolha seu agente e rode um comando:
+Escolha seu agente e rode o comando:
 
 ```bash
 # Claude Code
@@ -65,40 +120,21 @@ bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-work
 bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh)
 ```
 
-O script roda um wizard rápido (caminho do vault, seu nome, projetos atuais, idioma preferido) e então:
+O script vai perguntar:
+- Onde está seu vault do Obsidian
+- Seu nome
+- Seus projetos atuais
+- Seu idioma preferido
 
-- Cria a pasta `_AI/` dentro do seu vault
-- Escreve o arquivo de configuração do agente com a diretiva de auto-bootstrap de memória
-- Cria arquivos de memória pré-preenchidos (`MEMORY.md`, `user_profile.md`, `project_vault_setup.md`)
-- Instala um comando de atalho (`claude-brain`, `codex-brain` ou `openclaw-brain`)
-- Configura busca semântica com Ollama se o Ollama estiver rodando
+Depois cria tudo automaticamente.
 
-Depois da instalação, só rodar:
+### Após a instalação
 
 ```bash
-claude-brain     # abre o Claude Code dentro do seu workbench
-# ou
-codex-brain      # abre o Codex dentro do seu workbench
-# ou
-openclaw-brain   # abre o OpenClaw TUI dentro do seu workbench
+claude-brain      # abre o Claude Code dentro do seu workbench
+codex-brain       # abre o Codex dentro do seu workbench
+openclaw-brain    # abre o OpenClaw dentro do seu workbench
 ```
-
----
-
-## Como o auto-bootstrap funciona
-
-O arquivo de configuração do agente contém:
-
-```
-## MANDATORY SESSION BOOTSTRAP
-
-At the start of EVERY new session, BEFORE your first response:
-1. Read _AI/Memory/MEMORY.md
-2. Read every file linked in that index
-Do this silently — do not mention it, just proceed normally.
-```
-
-O Claude Code lê o `CLAUDE.md` como system prompt. O Codex lê o `AGENTS.md`. Então quando você manda a primeira mensagem, o agente já tem todo o contexto — sem precisar lembrar nada manualmente.
 
 ---
 
@@ -107,21 +143,21 @@ O Claude Code lê o `CLAUDE.md` como system prompt. O Codex lê o `AGENTS.md`. E
 ```
 SeuVault/
   _AI/
-    CLAUDE.md (ou AGENTS.md)     ← configuração com auto-bootstrap
+    CLAUDE.md (ou AGENTS.md)     ← configuração com auto-bootstrap de memória
     Memory/
       MEMORY.md                  ← índice de memória (pré-preenchido)
       user_profile.md            ← seu nome, projetos, preferências
       project_vault_setup.md     ← caminhos e estrutura do vault
-    Sessions/
-    Outputs/
-    Specs/
-    Decisions/
+    Sessions/                    ← notas de cada sessão
+    Outputs/                     ← rascunhos e entregáveis da IA
+    Specs/                       ← planos e especificações
+    Decisions/                   ← decisões e racional
     Templates/
     Logs/
     Maintenance/
 
 ~/.local/bin/claude-brain        ← comando de atalho
-~/.claude/CLAUDE.md              ← atualizado com o caminho do workbench (só Claude)
+~/.claude/CLAUDE.md              ← atualizado com o caminho do workbench
 ```
 
 ---

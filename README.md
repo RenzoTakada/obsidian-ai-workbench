@@ -6,53 +6,108 @@
 
 ---
 
-## The problem this solves
+## What is this?
 
-When you start using an AI assistant with Obsidian, two things happen:
+**Obsidian** is a note-taking app that saves everything as Markdown files on your computer — no cloud, no lock-in. Many people use it as a second brain: capturing ideas, studies, projects, and decisions in an organized and connected way.
 
-1. **The vault gets polluted** — AI-generated notes mix with your own thinking, and you lose track of what's yours.
-2. **The AI forgets everything** — every new session starts from zero, even if you've worked together for months.
+**Claude Code, Codex, and OpenClaw** are AI assistants that run in your terminal. They read and write files, execute code, research, and analyze. If configured correctly, they can work directly inside your Obsidian vault.
 
-This project solves both.
-
----
-
-## The idea
-
-Your Obsidian vault has two clear zones:
-
-```
-Your notes          ← where you think
-  └── _AI/          ← where the AI works
-```
-
-The AI gets its own isolated workbench inside the vault. It doesn't touch your notes unless you authorize it. And because the workbench lives inside the vault, everything persists across sessions.
-
-The key innovation is **auto-bootstrap**: a directive inside the agent's config file (`CLAUDE.md` or `AGENTS.md`) that forces the agent to silently read its memory files before the first response in every session. You never have to say "remember who I am" again.
+**This project** is the template that connects the two the right way.
 
 ---
 
-## What you need
+## Why use AI with Obsidian?
 
-| Tool | Required | Purpose |
-|---|---|---|
-| [Obsidian](https://obsidian.md) | Yes | Your personal knowledge vault |
-| One of the options below | Yes | Your AI assistant |
-| [Ollama](https://ollama.ai) | Optional | Local semantic memory search |
+Imagine having an assistant that:
 
-Pick your AI agent:
+- Reads your notes and understands the context of your work
+- Researches, summarizes, and produces drafts based on what you already know
+- Remembers your projects, preferences, and decisions between sessions
+- Organizes outputs and logs in your vault without cluttering your notes
 
-| Agent | Install |
+That's what you get when AI and Obsidian work together correctly.
+
+---
+
+## The problem — and why most people get it wrong
+
+When people try to use AI with Obsidian without a proper structure, two things happen:
+
+**1. The vault gets polluted**
+The AI starts generating notes, summaries, and drafts — and all of it mixes with your own notes. You lose track of what's yours and what was generated. Your second brain becomes a dump for AI content.
+
+**2. The AI forgets everything**
+Every time you open a new session, you have to explain from scratch who you are, what you're working on, and what your projects are. Without persistent memory, the AI never learns about you.
+
+---
+
+## What this project solves
+
+### Isolation — each in its own space
+
+Your notes stay untouched. The AI works in a separate folder (`_AI/`) inside the vault:
+
+```
+YourVault/
+  Your notes...       ← where you think
+  └── _AI/            ← where the AI works
+```
+
+The AI doesn't touch your notes unless you explicitly authorize it.
+
+### Persistent memory — it always remembers you
+
+The installer creates pre-filled memory files with your name, projects, and preferences. The agent's config file contains a special directive:
+
+```
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read _AI/Memory/MEMORY.md
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+```
+
+This forces the agent to silently load the memory before responding. You never have to say "remember who I am" again — it already knows.
+
+### One-command setup
+
+No manual configuration. One script does everything: creates the folders, writes the config files, fills in the initial memory, and installs a shortcut command.
+
+---
+
+## What you gain
+
+| Before | After |
 |---|---|
-| [Claude Code CLI](https://claude.ai/code) | `brew install claude` or download |
-| [OpenAI Codex CLI](https://github.com/openai/codex) | `npm install -g @openai/codex` |
+| AI forgets everything each session | AI remembers your projects and preferences automatically |
+| AI notes mixed with your own | Clean vault — AI isolated in `_AI/` |
+| Manual, tedious configuration | One command installs everything |
+| You explain context every time | Context loaded automatically |
+
+---
+
+## What you need to install
+
+| Tool | Required | How to install |
+|---|---|---|
+| [Obsidian](https://obsidian.md) | Yes | Download at obsidian.md |
+| One of the agents below | Yes | See options |
+| [Ollama](https://ollama.ai) | Optional | For local semantic memory search |
+
+**Choose your AI agent:**
+
+| Agent | How to install |
+|---|---|
+| [Claude Code](https://claude.ai/code) | Download at claude.ai/code |
+| [OpenAI Codex](https://github.com/openai/codex) | `npm install -g @openai/codex` |
 | [OpenClaw](https://openclaw.ai) | See openclaw.ai |
 
 ---
 
 ## Install
 
-Pick your agent and run one command:
+Pick your agent and run the command:
 
 ```bash
 # Claude Code
@@ -65,40 +120,21 @@ bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-work
 bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh)
 ```
 
-The script runs a short wizard (vault path, your name, current projects, preferred language) and then:
+The script will ask:
+- Where your Obsidian vault is
+- Your name
+- Your current projects
+- Your preferred language
 
-- Creates `_AI/` inside your vault
-- Writes the agent config file with the auto-bootstrap memory directive
-- Creates pre-filled memory files (`MEMORY.md`, `user_profile.md`, `project_vault_setup.md`)
-- Installs a shortcut command (`claude-brain`, `codex-brain`, or `openclaw-brain`)
-- Configures Ollama semantic search if Ollama is running
+Then it creates everything automatically.
 
-After install, just run:
+### After install
 
 ```bash
-claude-brain     # opens Claude Code inside your workbench
-# or
-codex-brain      # opens Codex inside your workbench
-# or
-openclaw-brain   # opens OpenClaw TUI inside your workbench
+claude-brain      # opens Claude Code inside your workbench
+codex-brain       # opens Codex inside your workbench
+openclaw-brain    # opens OpenClaw inside your workbench
 ```
-
----
-
-## How auto-bootstrap works
-
-The agent's config file contains:
-
-```
-## MANDATORY SESSION BOOTSTRAP
-
-At the start of EVERY new session, BEFORE your first response:
-1. Read _AI/Memory/MEMORY.md
-2. Read every file linked in that index
-Do this silently — do not mention it, just proceed normally.
-```
-
-Claude Code reads `CLAUDE.md` as a system prompt. Codex reads `AGENTS.md`. So when you send your first message, the agent already has your context — no manual reminder needed.
 
 ---
 
@@ -107,21 +143,21 @@ Claude Code reads `CLAUDE.md` as a system prompt. Codex reads `AGENTS.md`. So wh
 ```
 YourVault/
   _AI/
-    CLAUDE.md (or AGENTS.md)     ← auto-bootstrap config
+    CLAUDE.md (or AGENTS.md)     ← config with memory auto-bootstrap
     Memory/
       MEMORY.md                  ← memory index (pre-filled)
       user_profile.md            ← your name, projects, preferences
       project_vault_setup.md     ← vault paths and structure
-    Sessions/
-    Outputs/
-    Specs/
-    Decisions/
+    Sessions/                    ← notes from each session
+    Outputs/                     ← AI-generated drafts and deliverables
+    Specs/                       ← plans and specifications
+    Decisions/                   ← decisions and rationale
     Templates/
     Logs/
     Maintenance/
 
 ~/.local/bin/claude-brain        ← shortcut command
-~/.claude/CLAUDE.md              ← updated with workbench path (Claude only)
+~/.claude/CLAUDE.md              ← updated with workbench path
 ```
 
 ---
@@ -131,7 +167,7 @@ YourVault/
 ```
 [You think]       Your Obsidian notes, Zettelkasten, projects
       ↓ authorize
-[AI works]        _AI/ — the agent's workbench, isolated from your notes
+[AI works]        _AI/ — isolated from your notes
       ↓ you review
 [You decide]      What gets promoted to your permanent notes
 ```
