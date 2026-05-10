@@ -152,9 +152,15 @@ YourVault/
     Outputs/                     ← AI-generated drafts and deliverables
     Specs/                       ← plans and specifications
     Decisions/                   ← decisions and rationale
-    Templates/
-    Logs/
-    Maintenance/
+    Templates/                   ← reusable templates (memory review, etc.)
+    Logs/                        ← session action logs
+    Maintenance/                 ← memory review and cleanup routines
+    Safety/                      ← security rules, dangerous commands, sensitive paths
+    Archive/                     ← archived memory and past contexts
+    Skills/
+    Projects/
+    Briefings/
+    Inbox/
 
 ~/.local/bin/claude-brain        ← shortcut command
 ~/.claude/CLAUDE.md              ← updated with workbench path

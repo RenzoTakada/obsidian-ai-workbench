@@ -152,9 +152,15 @@ SeuVault/
     Outputs/                     ← rascunhos e entregáveis da IA
     Specs/                       ← planos e especificações
     Decisions/                   ← decisões e racional
-    Templates/
-    Logs/
-    Maintenance/
+    Templates/                   ← templates reutilizáveis (revisão de memória, etc.)
+    Logs/                        ← log de ações por sessão
+    Maintenance/                 ← rotinas de revisão e limpeza da memória
+    Safety/                      ← regras de segurança, comandos perigosos, caminhos sensíveis
+    Archive/                     ← memórias arquivadas e contextos antigos
+    Skills/
+    Projects/
+    Briefings/
+    Inbox/
 
 ~/.local/bin/claude-brain        ← comando de atalho
 ~/.claude/CLAUDE.md              ← atualizado com o caminho do workbench
