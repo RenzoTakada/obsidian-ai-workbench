@@ -119,6 +119,8 @@ Add Codex:
   _Codex/
 ```
 
+Then create a command such as `codex-brain` so Codex always starts inside `_Codex/`; see [Codex Brain Command](codex-brain-command.md).
+
 Each new agent gets:
 
 ```text

@@ -22,3 +22,9 @@ Act as a careful coding/research assistant and a librarian for authorized notes.
 - Decisions: `Decisions/`
 - Specs: `Specs/`
 - Templates: `Templates/`
+
+## Recommended launch command
+
+If the human created a wrapper such as `codex-brain`, prefer starting Codex with that command so the working directory is always this `_Codex/` workbench.
+
+Starting Codex from unrelated folders may create separate context/history outside this workbench, depending on the Codex CLI configuration.
