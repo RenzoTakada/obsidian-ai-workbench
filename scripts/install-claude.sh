@@ -60,7 +60,7 @@ TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
 step "Creating _Claude/ structure"
-for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Skills Projects Briefings Inbox; do
+for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Safety Skills Projects Briefings Inbox Archive; do
   mkdir -p "$BRAIN/$d"
 done
 ok "Folders created"
@@ -107,6 +107,29 @@ Produce drafts, analysis, plans — they belong inside \`_Claude/\` until the hu
 | Decisions | \`Decisions/\` |
 | Logs | \`Logs/\` |
 | Maintenance | \`Maintenance/\` |
+| Archived memory | \`Archive/\` |
+
+## Security rules
+
+Full rules: \`Safety/SECURITY_RULES.md\` | Dangerous commands: \`Safety/DANGEROUS_COMMANDS.md\` | Sensitive paths: \`Safety/SENSITIVE_PATHS.md\`
+
+1. Never edit or delete files outside \`_Claude/\` without explicit confirmation.
+2. Never run destructive commands without confirmation (rm -rf, git reset --hard, DROP, etc.).
+3. Never access sensitive paths (~/.ssh, ~/.aws, .env, etc.) without direct request.
+4. Never commit tokens, passwords, or secrets.
+5. Never make automatic commits.
+6. Never delete or modify memory automatically — always propose first in \`Outputs/\`.
+7. When in doubt: ask for confirmation.
+8. Log relevant actions in \`Logs/\`.
+
+## Memory maintenance
+
+When asked to: "faça manutenção da memória", "revise o cérebro", "limpe o contexto", "health check", "memory review", "verifique se a memória está poluída", or similar:
+1. Read all files in \`Memory/\` and linked files
+2. Use the template in \`Templates/memory-review-template.md\`
+3. Generate a proposal in \`Outputs/memory-health-YYYY-MM-DD.md\`
+4. Present the summary — do not apply changes automatically
+5. Wait for explicit confirmation
 CLAUDEMD
   ok "CLAUDE.md created"
 else
@@ -175,6 +198,230 @@ Workbench: \`${BRAIN}\`
 Outside \`_Claude/\`: ask before reading or editing.
 SETUP
 ok "Memory files created"
+
+# ── Safety files ──────────────────────────────────────────────────────────────
+step "Creating Safety/ files"
+[ ! -f "$BRAIN/Safety/SECURITY_RULES.md" ] && cat > "$BRAIN/Safety/SECURITY_RULES.md" << 'SRULES'
+# Security Rules — AI Workbench
+
+## Core principle
+Least privilege. When in doubt, ask for confirmation.
+
+## Free to do — inside `_Claude/`
+Create, edit, organize, delete files, logs, outputs, specs, sessions, memory.
+
+## Requires explicit confirmation
+Any action outside `_Claude/`: reading, editing, creating, or moving files.
+Before acting: show a summary and wait for confirmation.
+
+## Never — without exception
+1. Edit or delete files outside `_Claude/` without explicit confirmation
+2. Run destructive commands without confirmation (see DANGEROUS_COMMANDS.md)
+3. Access sensitive paths without authorization (see SENSITIVE_PATHS.md)
+4. Commit, display, or copy tokens, passwords, private keys, or secrets
+5. Add .env files or credentials to Git
+6. Make automatic commits without being asked
+7. Delete or modify memory automatically — propose first in Outputs/
+8. Assume a prior authorization applies to a different context
+
+## Logging
+Log in `Logs/` whenever modifying memory, acting outside `_Claude/`, or running high-impact commands.
+SRULES
+
+[ ! -f "$BRAIN/Safety/DANGEROUS_COMMANDS.md" ] && cat > "$BRAIN/Safety/DANGEROUS_COMMANDS.md" << 'DCMDS'
+# Dangerous Commands — Require Explicit Confirmation
+
+Never run without showing the full command and waiting for approval:
+
+## Deletion
+rm -rf | rm -r | delete | truncate | clean | wipe | purge | shred
+
+## Destructive git
+git reset --hard | git push --force | git clean -f | git checkout -- . | git restore . | git branch -D
+
+## Database
+DROP TABLE | DROP DATABASE | TRUNCATE TABLE | DELETE FROM (without WHERE)
+
+## Permissions
+chmod -R | chown -R
+
+## Containers
+docker rm | docker rmi | docker volume rm | docker system prune | docker-compose down -v
+
+## Any command that:
+- Modifies files outside `_Claude/`
+- Accesses or modifies .git/
+- Reads or writes credentials or tokens
+- Removes data irreversibly
+DCMDS
+
+[ ! -f "$BRAIN/Safety/SENSITIVE_PATHS.md" ] && cat > "$BRAIN/Safety/SENSITIVE_PATHS.md" << 'SPATHS'
+# Sensitive Paths — Do Not Access Without Explicit Authorization
+
+~/.ssh/     ~/.gnupg/    ~/.aws/      ~/.config/
+~/.kube/    ~/.docker/   ~/.npmrc     ~/.netrc
+**/.env     **/.env.*    **/secrets.* **/credentials.*
+~/Downloads/ ~/Desktop/  ~/Library/   /etc/  /private/
+.git/       ~/.gitconfig
+
+Also: any directory outside the vault, corporate projects, client repos.
+
+If sensitive data is found in memory:
+1. Do not copy, display, or transmit it
+2. Notify the user immediately
+3. Propose removal in Outputs/ — wait for confirmation
+SPATHS
+ok "Safety/ files created"
+
+# ── Maintenance files ─────────────────────────────────────────────────────────
+step "Creating Maintenance/ files"
+[ ! -f "$BRAIN/Maintenance/MEMORY_CLEANUP_CHECKLIST.md" ] && cat > "$BRAIN/Maintenance/MEMORY_CLEANUP_CHECKLIST.md" << 'MCHECK'
+# Memory Cleanup Checklist
+
+## Frequency
+- [ ] Light review — weekly
+- [ ] Full review — monthly
+- [ ] After major projects
+- [ ] After significant context changes
+
+## Checklist
+- [ ] Review Memory/MEMORY.md — concise and current?
+- [ ] Review all linked files
+- [ ] Look for duplicates
+- [ ] Look for contradictions
+- [ ] Look for sensitive data
+- [ ] Are closed projects still in active context?
+- [ ] Have old decisions been replaced?
+- [ ] Files that should be archived?
+- [ ] Files that should be summarized?
+
+## Process (never automatic)
+1. Use template: Templates/memory-review-template.md
+2. Generate proposal: Outputs/memory-cleanup-YYYY-MM-DD.md
+3. Wait for explicit confirmation
+4. Apply approved changes
+5. Log in Logs/
+MCHECK
+
+[ ! -f "$BRAIN/Maintenance/MEMORY_HEALTH_REPORT.md" ] && cat > "$BRAIN/Maintenance/MEMORY_HEALTH_REPORT.md" << 'MHEALTH'
+# Memory Health Report — Instructions
+
+Run when asked: "health check", "memory review", "revise o cérebro", "faça manutenção da memória", etc.
+
+## Process
+1. Read Memory/MEMORY.md and all linked files
+2. Answer the questions below
+3. Generate proposal in Outputs/memory-health-YYYY-MM-DD.md
+4. Present summary — do not apply changes automatically
+
+## Questions
+- Is the memory clear and objective?
+- Is there too much information?
+- Duplicate or contradictory entries?
+- Outdated information or closed projects in active context?
+- Files that should be archived or summarized?
+- Sensitive data that should not be saved?
+- Which files are critical for bootstrap?
+- Which files can load on demand?
+
+## Output format
+File: Outputs/memory-health-YYYY-MM-DD.md
+Status: green / yellow / red
+List: issues found, proposed actions (pending confirmation)
+MHEALTH
+
+[ ! -f "$BRAIN/Maintenance/MEMORY_ARCHIVE_POLICY.md" ] && cat > "$BRAIN/Maintenance/MEMORY_ARCHIVE_POLICY.md" << 'MARCHIVE'
+# Memory Archive Policy
+
+## Archive when
+- Project closed or paused >1 month
+- Decision replaced by a newer one
+- Context no longer relevant but has historical value
+
+## Delete when
+- Exact duplicate of another file
+- Contains sensitive data (with user confirmation)
+- No practical utility anymore
+
+## Never automatic
+All archiving requires a proposal in Outputs/ and explicit user confirmation.
+
+## Naming
+Archive/YYYY-MM-DD_original-name.md
+MARCHIVE
+ok "Maintenance/ files created"
+
+# ── Templates ─────────────────────────────────────────────────────────────────
+step "Creating Templates/"
+[ ! -f "$BRAIN/Templates/memory-review-template.md" ] && cat > "$BRAIN/Templates/memory-review-template.md" << 'TMPL'
+# Memory Review — {{date}}
+
+## 1. Review context
+- Type: [ ] light weekly / [ ] full monthly / [ ] post-project / [ ] on demand
+
+## 2. Files reviewed
+- [ ] Memory/MEMORY.md
+
+## 3. Still relevant information
+
+## 4. Duplicate information
+
+## 5. Outdated information
+
+## 6. Contradictory information
+
+## 7. Sensitive data found
+⚠️ Indicate file and line only — do not reproduce the content.
+
+## 8. Cleanup suggestions
+
+## 9. Files to archive
+
+## 10. Files to summarize
+
+## 11. Decisions to document
+
+## 12. Critical bootstrap files
+
+## 13. On-demand files
+
+## 14. Next actions
+- [ ]
+
+## 15. Confirmation required
+No changes will be made automatically. Actions execute only after explicit user confirmation.
+TMPL
+ok "Templates/ files created"
+
+# ── Logs README ───────────────────────────────────────────────────────────────
+[ ! -f "$BRAIN/Logs/README.md" ] && cat > "$BRAIN/Logs/README.md" << 'LREADME'
+# Logs
+
+One file per day: YYYY-MM-DD.md
+
+## What to log
+- Memory file creation or modification
+- Memory review or cleanup proposals
+- Actions outside `_Claude/` (with authorization)
+- Attempted access to sensitive paths
+- High-impact command execution
+- Important decisions
+
+## Format
+## HH:MM — [action type]
+**Action:** description | **Files affected:** path | **Status:** completed / pending confirmation
+LREADME
+
+# ── Archive README ────────────────────────────────────────────────────────────
+[ ! -f "$BRAIN/Archive/README.md" ] && cat > "$BRAIN/Archive/README.md" << 'AREADME'
+# Archive
+
+Archived memory — historically relevant but no longer in active context.
+Naming: YYYY-MM-DD_original-name.md
+
+No file is moved here automatically. All archiving requires a proposal in Outputs/ and explicit confirmation.
+See: Maintenance/MEMORY_ARCHIVE_POLICY.md
+AREADME
 
 # ── claude-brain ──────────────────────────────────────────────────────────────
 step "Creating claude-brain command"

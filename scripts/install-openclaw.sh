@@ -53,7 +53,7 @@ TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
 step "Creating _OpenClaw/ structure"
-for d in Memory Sessions Outputs Logs Specs Decisions Maintenance Skills Projects Briefings; do
+for d in Memory Sessions Outputs Logs Specs Decisions Maintenance Safety Skills Projects Briefings Archive; do
   mkdir -p "$BRAIN/$d"
 done
 ok "Folders created"
@@ -128,6 +128,38 @@ MEM
 [ ! -f "$BRAIN/Memory/vault_setup.md" ] && printf -- "---\ntype: project\ncreated: %s\n---\n\nVault: \`%s\`\nWorkbench: \`%s\`\n\nOutside \`_OpenClaw/\`: ask before reading or editing.\n" "$TODAY" "$VAULT" "$BRAIN" > "$BRAIN/Memory/vault_setup.md"
 
 ok "Config files created"
+
+# ── Safety / Maintenance / Archive ────────────────────────────────────────────
+step "Creating Safety/, Maintenance/, Archive/ files"
+[ ! -f "$BRAIN/Safety/SECURITY_RULES.md" ] && cat > "$BRAIN/Safety/SECURITY_RULES.md" << 'SRULES'
+# Security Rules — AI Workbench
+## Core principle
+Least privilege. When in doubt, ask for confirmation.
+## Free inside `_OpenClaw/`
+Create, edit, organize, delete files, logs, outputs, specs, sessions, memory.
+## Requires explicit confirmation
+Any action outside `_OpenClaw/`. Show summary and wait for confirmation.
+## Never
+1. Edit/delete files outside `_OpenClaw/` without confirmation
+2. Run destructive commands without confirmation
+3. Access sensitive paths without authorization
+4. Commit/display/copy tokens, passwords, private keys, or secrets
+5. Delete or modify memory automatically — propose first in Outputs/
+SRULES
+
+[ ! -f "$BRAIN/Logs/README.md" ] && cat > "$BRAIN/Logs/README.md" << 'LREADME'
+# Logs — YYYY-MM-DD.md
+Log: memory changes, actions outside _OpenClaw/ (authorized), high-impact commands, sensitive path attempts.
+Format: ## HH:MM — [type] | Action | Files affected | Status
+LREADME
+
+[ ! -f "$BRAIN/Archive/README.md" ] && cat > "$BRAIN/Archive/README.md" << 'AREADME'
+# Archive
+Naming: YYYY-MM-DD_original-name.md
+No file moved here automatically. Requires proposal in Outputs/ and explicit confirmation.
+AREADME
+ok "Safety/, Maintenance/, Archive/ files created"
+
 
 # ── Configure OpenClaw workspace ──────────────────────────────────────────────
 step "Configuring OpenClaw"

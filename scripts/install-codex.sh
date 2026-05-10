@@ -53,7 +53,7 @@ TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
 step "Creating _Codex/ structure"
-for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Skills Projects Briefings Inbox; do
+for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Safety Skills Projects Briefings Inbox Archive; do
   mkdir -p "$BRAIN/$d"
 done
 ok "Folders created"
@@ -123,6 +123,92 @@ MEM
 [ ! -f "$BRAIN/Memory/user_profile.md" ] && printf -- "---\ntype: user\ncreated: %s\n---\n\nName: %s\nLanguage: %s\nProjects: %s\nVault: %s\n" "$TODAY" "$NAME" "$LANG" "${PROJECTS:-not set}" "$VAULT" > "$BRAIN/Memory/user_profile.md"
 [ ! -f "$BRAIN/Memory/project_vault_setup.md" ] && printf -- "---\ntype: project\ncreated: %s\n---\n\nVault: \`%s\`\nWorkbench: \`%s\`\n\nOutside \`_Codex/\`: ask before reading or editing.\n" "$TODAY" "$VAULT" "$BRAIN" > "$BRAIN/Memory/project_vault_setup.md"
 ok "Memory files created"
+
+# ── Safety / Maintenance / Templates ──────────────────────────────────────────
+step "Creating Safety/, Maintenance/, Templates/"
+[ ! -f "$BRAIN/Safety/SECURITY_RULES.md" ] && cat > "$BRAIN/Safety/SECURITY_RULES.md" << 'SRULES'
+# Security Rules — AI Workbench
+## Core principle
+Least privilege. When in doubt, ask for confirmation.
+## Free inside `_Codex/`
+Create, edit, organize, delete files, logs, outputs, specs, sessions, memory.
+## Requires explicit confirmation
+Any action outside `_Codex/`. Show summary and wait for confirmation.
+## Never
+1. Edit/delete files outside `_Codex/` without confirmation
+2. Run destructive commands without confirmation (see DANGEROUS_COMMANDS.md)
+3. Access sensitive paths without authorization (see SENSITIVE_PATHS.md)
+4. Commit/display/copy tokens, passwords, private keys, or secrets
+5. Make automatic commits
+6. Delete or modify memory automatically — propose first in Outputs/
+SRULES
+
+[ ! -f "$BRAIN/Safety/DANGEROUS_COMMANDS.md" ] && cat > "$BRAIN/Safety/DANGEROUS_COMMANDS.md" << 'DCMDS'
+# Dangerous Commands — Require Explicit Confirmation
+rm -rf | rm -r | delete | truncate | clean | wipe | purge
+git reset --hard | git push --force | git clean -f | git branch -D
+DROP TABLE | DROP DATABASE | TRUNCATE TABLE | DELETE FROM (no WHERE)
+chmod -R | chown -R
+docker rm | docker volume rm | docker system prune
+Any command modifying files outside `_Codex/`, touching .git/, or reading credentials.
+DCMDS
+
+[ ! -f "$BRAIN/Safety/SENSITIVE_PATHS.md" ] && cat > "$BRAIN/Safety/SENSITIVE_PATHS.md" << 'SPATHS'
+# Sensitive Paths — Do Not Access Without Authorization
+~/.ssh/ | ~/.gnupg/ | ~/.aws/ | ~/.config/ | ~/.kube/ | ~/.docker/ | ~/.npmrc
+**/.env | **/secrets.* | **/credentials.*
+~/Downloads/ | ~/Desktop/ | ~/Library/ | /etc/ | /private/
+.git/ | Any directory outside the vault | Corporate or client projects
+SPATHS
+
+[ ! -f "$BRAIN/Maintenance/MEMORY_CLEANUP_CHECKLIST.md" ] && cat > "$BRAIN/Maintenance/MEMORY_CLEANUP_CHECKLIST.md" << 'MCHECK'
+# Memory Cleanup Checklist
+## Frequency: weekly light / monthly full / after major projects
+## Checklist
+- [ ] Memory/MEMORY.md — concise and current?
+- [ ] All linked files reviewed
+- [ ] Duplicates found?
+- [ ] Contradictions found?
+- [ ] Sensitive data found?
+- [ ] Closed projects in active context?
+- [ ] Old decisions replaced?
+## Process (never automatic)
+1. Template: Templates/memory-review-template.md → 2. Proposal: Outputs/memory-cleanup-YYYY-MM-DD.md → 3. Confirm → 4. Apply → 5. Log
+MCHECK
+
+[ ! -f "$BRAIN/Maintenance/MEMORY_HEALTH_REPORT.md" ] && cat > "$BRAIN/Maintenance/MEMORY_HEALTH_REPORT.md" << 'MHEALTH'
+# Memory Health Report
+Run when asked: "health check", "memory review", "clean the context", etc.
+## Process
+1. Read Memory/MEMORY.md and all linked files
+2. Answer: clear? duplicates? outdated? contradictions? sensitive data? bootstrap too heavy?
+3. Generate proposal in Outputs/memory-health-YYYY-MM-DD.md
+4. Present summary — do not apply changes automatically
+MHEALTH
+
+[ ! -f "$BRAIN/Templates/memory-review-template.md" ] && cat > "$BRAIN/Templates/memory-review-template.md" << 'TMPL'
+# Memory Review — {{date}}
+## 1. Review context (type / files reviewed)
+## 2. Still relevant | 3. Duplicates | 4. Outdated | 5. Contradictions
+## 6. Sensitive data found (file + line only — do not reproduce content)
+## 7. Cleanup suggestions | 8. Files to archive | 9. Files to summarize
+## 10. Decisions to document | 11. Critical bootstrap files | 12. On-demand files
+## 13. Next actions
+## 14. Confirmation required — no changes made automatically
+TMPL
+
+[ ! -f "$BRAIN/Logs/README.md" ] && cat > "$BRAIN/Logs/README.md" << 'LREADME'
+# Logs — YYYY-MM-DD.md
+Log: memory changes, actions outside _Codex/ (authorized), high-impact commands, sensitive path attempts, important decisions.
+Format: ## HH:MM — [type] | Action | Files affected | Status
+LREADME
+
+[ ! -f "$BRAIN/Archive/README.md" ] && cat > "$BRAIN/Archive/README.md" << 'AREADME'
+# Archive
+Naming: YYYY-MM-DD_original-name.md
+No file moved here automatically. Requires proposal in Outputs/ and explicit confirmation.
+AREADME
+ok "Safety/, Maintenance/, Templates/ files created"
 
 # ── codex-brain ───────────────────────────────────────────────────────────────
 step "Creating codex-brain command"
