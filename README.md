@@ -1,115 +1,165 @@
-# Obsidian AI Workbench
+# obsidian-ai-workbench — multi-brain
 
-A practical architecture for using Obsidian as a human second brain while giving AI agents their own separate workbench inside the vault.
+> One Obsidian vault. Multiple AI brains. Each in its own lane.
 
-It works with:
+[Leia em Português](README.pt.md)
 
-- Claude Code + Obsidian
-- Codex + Obsidian
-- OpenClaw + Obsidian
-- other local/agentic AI tools that can read and write Markdown files
-- optional Ollama embeddings for local semantic search
+---
 
-The core idea is simple:
+## The problem this solves
 
-> Your Obsidian vault is where **you think**.  
-> The AI workbench is where **the AI works**.
+When you start using an AI assistant with Obsidian, two things happen:
 
-Do not mix them.
+1. **The vault gets polluted** — AI-generated notes mix with your own thinking, and you lose track of what's yours.
+2. **The AI forgets everything** — every new session starts from zero, even if you've worked together for months.
 
-## Why this exists
+This project solves both.
 
-Most “AI second brain” setups accidentally become a pile of AI-generated notes. That feels productive, but it can destroy the value of a personal knowledge system.
+---
 
-A useful AI + Obsidian setup needs three flows:
+## The idea
 
-1. **Human second brain** — your own notes, thoughts, studies, decisions, Zettelkasten/permanent notes.
-2. **AI workbench** — logs, outputs, specs, drafts, templates, decisions, operational memory.
-3. **Integrated flow** — the AI reads authorized human notes, produces drafts/analysis in its own space, and you decide what becomes real knowledge.
+Your Obsidian vault has three layers:
 
-## Recommended vault layout
-
-```text
-MyVault/
-  Inbox/                 # optional human inbox
-  Literature Notes/      # optional human study notes
-  Permanent Notes/       # optional human-authored evergreen notes
-  Projects/              # human projects
-  Topics/                # human topic maps / MOCs
-  _AI/                   # AI workbench - agent can work here
+```
+Your notes          ← where you think
+  └── _Claude/      ← where Claude works
+  └── _Codex/       ← where Codex works
+  └── _OpenClaw/    ← where OpenClaw works
 ```
 
-Inside `_AI/`:
+Each AI agent gets its own isolated workbench inside the vault. They don't touch your notes unless you authorize it. And because the workbench lives inside the vault, it's always there the next time you open it.
 
-```text
-_AI/
-  AGENTS.md or CLAUDE.md # tool-specific instructions
-  Memory/                # durable AI memory
-  Sessions/              # chronological session notes
-  Outputs/               # AI-generated deliverables/drafts
-  Logs/                  # operational logs
-  Projects/              # AI-managed project workspace
-  Specs/                 # plans, PRDs, implementation specs
-  Skills/                # reusable procedures
-  Templates/             # reusable document templates
-  Decisions/             # decisions and rationale
-  Briefings/             # reference briefings/databases
-  Maintenance/           # audits, cleanup, health checks
+The key innovation is **auto-bootstrap**: a directive inside each agent's config file (`CLAUDE.md`, `AGENTS.md`) that forces the agent to silently read its memory files before the first response in every session. You never have to say "remember who I am" again.
+
+---
+
+## What you need
+
+| Tool | Required | Purpose |
+|---|---|---|
+| [Obsidian](https://obsidian.md) | Yes | Your personal knowledge vault |
+| [Claude Code CLI](https://claude.ai/code) | For Claude workbench | AI coding + reasoning assistant |
+| [OpenAI Codex CLI](https://github.com/openai/codex) | For Codex workbench | AI coding assistant |
+| [OpenClaw](https://openclaw.ai) | For OpenClaw workbench | Multi-model TUI agent |
+| [Ollama](https://ollama.ai) | Optional | Local semantic memory search |
+
+Install at least one AI agent CLI before running the setup script.
+
+---
+
+## Install
+
+Pick the agent(s) you want:
+
+```bash
+# Claude Code workbench
+bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/multi-brain/scripts/install-claude.sh)
+
+# Codex workbench
+bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/multi-brain/scripts/install-codex.sh)
+
+# OpenClaw workbench
+bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/multi-brain/scripts/install-openclaw.sh)
 ```
 
-## Golden rule
+Each script runs a short wizard (vault path, your name, current projects, preferred language) and then:
 
-The AI may be a librarian, assistant, reviewer, and multiplier.
+- Creates the agent's workbench folder inside your vault
+- Writes a config file with the auto-bootstrap memory directive
+- Creates pre-filled memory files (`MEMORY.md`, `user_profile.md`, `project_vault_setup.md`)
+- Installs a shortcut command (`claude-brain`, `codex-brain`, `openclaw-brain`)
+- Configures Ollama semantic search if Ollama is running
 
-The AI should not become the author of your permanent notes.
+After install, just run:
 
-## Quick start
+```bash
+claude-brain      # opens Claude Code inside your workbench
+codex-brain       # opens Codex inside your workbench
+openclaw-brain    # opens OpenClaw TUI inside your workbench
+```
 
-1. Create or open an Obsidian vault.
-2. Copy `templates/generic/_AI/` into your vault root.
-3. Pick your tool:
-   - Claude Code → copy `templates/claude-code/CLAUDE.md` into `_AI/` or your chosen project root.
-   - Codex → copy `templates/codex/AGENTS.md` into `_AI/` or your chosen project root.
-   - OpenClaw → copy files from `templates/openclaw/` into `_AI/` and set the OpenClaw workspace to that folder.
-4. Tell your AI tool to use `_AI/` as its workbench and to treat everything outside `_AI/` as human-authored space.
-5. Optional: configure Ollama embeddings for local semantic search.
+---
 
-See [`docs/setup-step-by-step.md`](docs/setup-step-by-step.md).
+## How auto-bootstrap works
 
-## Let an AI implement this for you
+Each agent's config file contains:
 
-Use one of these prompts:
+```
+## MANDATORY SESSION BOOTSTRAP
 
-- [`prompts/implement-with-claude-code.md`](prompts/implement-with-claude-code.md)
-- [`prompts/implement-with-codex.md`](prompts/implement-with-codex.md)
-- [`prompts/implement-with-openclaw.md`](prompts/implement-with-openclaw.md)
+At the start of EVERY new session, BEFORE your first response:
+1. Read Memory/MEMORY.md
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+```
+
+Claude Code reads `CLAUDE.md` as a system prompt. Codex reads `AGENTS.md`. So when you send your first message, the agent already has your context — no manual reminder needed.
+
+---
+
+## What the installer creates
+
+```
+YourVault/
+  _Claude/
+    CLAUDE.md                    ← auto-bootstrap config
+    Memory/
+      MEMORY.md                  ← memory index (pre-filled)
+      user_profile.md            ← your name, projects, preferences
+      project_vault_setup.md     ← vault paths and structure
+    Sessions/
+    Outputs/
+    Specs/
+    Decisions/
+    Templates/
+    Logs/
+    Maintenance/
+    Briefings/
+    Skills/
+    Projects/
+    Inbox/
+  _Codex/                        ← same structure if Codex installed
+  _OpenClaw/                     ← same structure if OpenClaw installed
+
+~/.local/bin/claude-brain        ← shortcut command
+~/.local/bin/codex-brain
+~/.local/bin/openclaw-brain
+~/.claude/CLAUDE.md              ← updated with workbench path (Claude only)
+```
+
+---
+
+## The three flows
+
+```
+[You think]       Your Obsidian notes, Zettelkasten, projects
+      ↓ authorize
+[AI works]        _Claude/, _Codex/, _OpenClaw/ — each in its lane
+      ↓ you review
+[You decide]      What gets promoted to your permanent notes
+```
+
+The AI is a librarian, reviewer, and multiplier — not the author of your second brain.
+
+---
+
+## One AI only?
+
+If you only use one AI tool, see the [one-brain branch](../../tree/one-brain) — simpler setup with a single `_AI/` folder.
+
+---
 
 ## Documentation
 
-- [Architecture](docs/architecture.md)
-- [Discovery and validation](docs/discovery-and-validation.md)
-- [Human vs AI boundaries](docs/human-vs-ai-boundaries.md)
-- [Folder structure](docs/folder-structure.md)
+- [How it works — three flows](docs/system.md)
 - [Claude Code setup](docs/claude-code.md)
-- [Claude brain command](docs/claude-brain-command.md)
-- [Codex brain command](docs/codex-brain-command.md)
 - [Codex setup](docs/codex.md)
 - [OpenClaw setup](docs/openclaw.md)
 - [Ollama embeddings](docs/ollama-embeddings.md)
-- [Maintenance](docs/maintenance.md)
-- [Shared Ollama for agents](docs/shared-ollama-for-agents.md)
-- [Add Codex to existing vault](docs/add-codex-to-existing-vault.md)
-- [Add Claude Code to existing vault](docs/add-claude-to-existing-vault.md)
+- [Maintenance guide](docs/maintenance.md)
 
-
-## Version 2: multiple AI workbenches
-
-If you already have one AI workbench (for example `_OpenClaw/`, `AI/`, or another existing folder) and want to add another agent such as Claude Code or Codex, see:
-
-- [Multi-agent workbenches](docs/multi-agent-workbenches.md)
-- [Add Claude Code to an existing vault](docs/add-claude-to-existing-vault.md)
-- [Add Codex to an existing vault](docs/add-codex-to-existing-vault.md)
-- [Shared Ollama for multiple agents](docs/shared-ollama-for-agents.md)
+---
 
 ## License
 

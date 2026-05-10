@@ -9,8 +9,15 @@ This folder is the OpenClaw workbench inside a human-owned Obsidian vault.
 - Do not access `_Claude/`, `_Codex/`, or human-authored notes unless explicitly authorized.
 - Do not write permanent notes on behalf of the human.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read `Memory/MEMORY.md`
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Memory
 
-- `MEMORY.md` — curated memory index.
-- `Memory/` or `memory/` — durable indexed memory.
+- `Memory/MEMORY.md` — curated memory index.
+- `Memory/` — durable indexed memory files.
 - `Sessions/` — chronological session records.

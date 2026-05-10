@@ -2,6 +2,13 @@
 
 You are Claude Code working inside `_Claude/`, a dedicated workbench inside a human-owned Obsidian vault.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Use the Read tool to read `Memory/MEMORY.md`
+2. Use the Read tool to read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Boundary
 
 - Inside `_Claude/`: you may create, edit, organize, and maintain files.

@@ -2,6 +2,13 @@
 
 You are Codex working inside `_Codex/`, a dedicated workbench inside a human-owned Obsidian vault.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read `Memory/MEMORY.md`
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Boundary
 
 - Inside `_Codex/`: work autonomously unless told otherwise.
