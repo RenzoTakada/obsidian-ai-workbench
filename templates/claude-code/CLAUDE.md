@@ -2,6 +2,13 @@
 
 You are working inside an Obsidian vault with a dedicated AI workbench.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Use the Read tool to read `_AI/Memory/MEMORY.md`
+2. Use the Read tool to read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Boundary
 
 - Inside `_AI/`: you may create, edit, organize, and maintain files.

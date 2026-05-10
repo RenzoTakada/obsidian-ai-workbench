@@ -2,6 +2,13 @@
 
 This workspace is an AI workbench inside an Obsidian vault.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read `_AI/Memory/MEMORY.md`
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Boundary
 
 - Inside `_AI/`: work autonomously unless told otherwise.

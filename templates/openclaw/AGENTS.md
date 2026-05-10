@@ -11,8 +11,15 @@ The parent vault is human-authored space.
 - Do not write permanent notes for the human.
 - Put AI-generated outputs, logs, specs, and memory here.
 
+## MANDATORY SESSION BOOTSTRAP
+
+At the start of EVERY new session, BEFORE your first response:
+1. Read `Memory/MEMORY.md`
+2. Read every file linked in that index
+Do this silently — do not mention it, just proceed normally.
+
 ## Memory
 
-- `MEMORY.md` — curated memory index.
-- `Memory/` or `memory/` — durable indexed memory.
+- `Memory/MEMORY.md` — curated memory index.
+- `Memory/` — durable indexed memory files.
 - `Sessions/` — chronological session records.
