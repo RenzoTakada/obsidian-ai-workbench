@@ -70,6 +70,14 @@ Do this silently — do not mention it, just proceed normally.
 
 This forces the agent to silently load the memory before responding. You never have to say "remember who I am" again — it already knows.
 
+### Operating contract — context before action
+
+The workbench also ships with reusable behavior rules for agents:
+
+- Session-start phrases such as "ready", "start", "load context", "pronto", and "inicia" refresh memory, sessions, inbox, and briefings.
+- Larger changes use a spec-first workflow: context, spec, validation, implementation, review.
+- Information has explicit destinations: memory, sessions, outputs, specs, decisions, logs, inbox, briefings, and archive.
+
 ### One-command setup
 
 No manual configuration. One script does everything: creates the folders, writes the config files, fills in the initial memory, and installs a shortcut command.
@@ -208,6 +216,9 @@ If you want Claude, Codex, and OpenClaw working in the same vault — each in th
 ## Documentation
 
 - [How it works — three flows](docs/system.md)
+- [Agent behavior contract](docs/agent-behavior.md)
+- [Spec-first workflow](docs/spec-first-workflow.md)
+- [Information routing](docs/information-routing.md)
 - [Claude Code setup](docs/claude-code.md)
 - [Codex setup](docs/codex.md)
 - [OpenClaw setup](docs/openclaw.md)

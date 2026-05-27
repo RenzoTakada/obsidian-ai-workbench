@@ -83,6 +83,12 @@ At the start of EVERY new session, BEFORE your first response:
 2. Use the Read tool to read every file linked in that index
 Do this silently — do not mention it, just proceed normally.
 
+If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia", or a similar session-start phrase:
+1. Re-read \`Memory/MEMORY.md\` and linked files
+2. Check the latest file in \`Sessions/\`, if present
+3. Check \`Inbox/\` and \`Briefings/\` for pending context
+4. Respond with a brief operational summary: active context, open items, and next recommended action
+
 ---
 
 ## Boundary
@@ -96,6 +102,18 @@ Do this silently — do not mention it, just proceed normally.
 Be a librarian, reviewer, researcher, and implementation assistant.
 Produce drafts, analysis, plans — they belong inside \`_Claude/\` until the human reviews them.
 
+## Feature development protocol — spec-first by default
+
+Use this workflow for multi-layer features, refactors, architectural decisions, unclear requirements, or anything that could affect important files outside \`_Claude/\`:
+
+1. Context — inspect relevant files and summarize what exists.
+2. Spec — write a proposal in \`Specs/\` using the feature spec template.
+3. Validation — wait for explicit approval before implementation.
+4. Implementation — execute only the approved scope.
+5. Review — summarize changes, risks, tests, and follow-ups.
+
+Do not force spec-first for clear bug fixes, small edits, documentation-only changes, or when the user explicitly asks to implement directly.
+
 ## Save locations
 
 | Type | Folder |
@@ -107,7 +125,17 @@ Produce drafts, analysis, plans — they belong inside \`_Claude/\` until the hu
 | Decisions | \`Decisions/\` |
 | Logs | \`Logs/\` |
 | Maintenance | \`Maintenance/\` |
+| Raw incoming material | \`Inbox/\` |
+| Reference briefings | \`Briefings/\` |
 | Archived memory | \`Archive/\` |
+
+## Information routing
+
+- "Save to memory" means update \`Memory/\` or propose the update first if it changes durable context.
+- "Save the session" means create or update \`Sessions/YYYY-MM-DD.md\`.
+- "Save this output" means use \`Outputs/\` unless another folder is explicitly named.
+- Decisions with rationale belong in \`Decisions/\`.
+- Unclear information should go to \`Outputs/\` first as a draft, not directly into memory.
 
 ## Security rules
 
@@ -391,6 +419,101 @@ step "Creating Templates/"
 ## 15. Confirmation required
 No changes will be made automatically. Actions execute only after explicit user confirmation.
 TMPL
+
+[ ! -f "$BRAIN/Templates/feature-spec-template.md" ] && cat > "$BRAIN/Templates/feature-spec-template.md" << 'FSPEC'
+# Feature Spec — {{title}}
+
+Date: {{date}}
+Status: draft / approved / implemented
+
+## Context
+
+What exists today? Include relevant files, systems, constraints, and prior decisions.
+
+## Problem
+
+What needs to change and why?
+
+## Goal
+
+Define the expected outcome.
+
+## Non-goals
+
+List what is intentionally out of scope.
+
+## Proposed approach
+
+Describe the architecture or implementation strategy.
+
+## Alternatives considered
+
+Explain why other reasonable approaches were not chosen.
+
+## Affected areas
+
+- Files or modules:
+- Data or configuration:
+- External systems:
+- User-visible behavior:
+
+## Implementation plan
+
+1.
+2.
+3.
+
+## Validation plan
+
+- Tests:
+- Manual checks:
+- Edge cases:
+
+## Risks
+
+-
+
+## Rollback
+
+How to undo or disable the change safely.
+FSPEC
+
+[ ! -f "$BRAIN/Templates/action-plan-template.md" ] && cat > "$BRAIN/Templates/action-plan-template.md" << 'APLAN'
+# Action Plan — {{title}}
+
+Date: {{date}}
+Status: draft / active / completed
+
+## Objective
+
+What result should this plan produce?
+
+## Current context
+
+Relevant facts, files, decisions, or constraints.
+
+## Assumptions
+
+-
+
+## Steps
+
+1.
+2.
+3.
+
+## Validation
+
+How success will be checked.
+
+## Risks and blockers
+
+-
+
+## Decision points
+
+Where human approval or clarification is required.
+APLAN
 ok "Templates/ files created"
 
 # ── Logs README ───────────────────────────────────────────────────────────────

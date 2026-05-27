@@ -70,6 +70,14 @@ Do this silently — do not mention it, just proceed normally.
 
 Isso força o agente a carregar a memória silenciosamente antes de responder. Você nunca mais precisa dizer "lembre quem eu sou" — ele simplesmente já sabe.
 
+### Contrato operacional — contexto antes da ação
+
+O workbench também vem com regras reutilizáveis de comportamento para os agentes:
+
+- Frases de início como "ready", "start", "load context", "pronto" e "inicia" recarregam memória, sessões, inbox e briefings.
+- Mudanças maiores seguem spec-first: contexto, especificação, validação, implementação e revisão.
+- Cada tipo de informação tem destino explícito: memória, sessões, outputs, specs, decisões, logs, inbox, briefings e archive.
+
 ### Instalação em um comando
 
 Sem configuração manual. Um script faz tudo: cria as pastas, escreve os arquivos de configuração, preenche a memória inicial e instala um comando de atalho.
@@ -208,6 +216,9 @@ Se você quer Claude, Codex e OpenClaw trabalhando no mesmo vault — cada um na
 ## Documentação
 
 - [Como funciona — três fluxos](docs/system.md)
+- [Contrato de comportamento do agente](docs/agent-behavior.md)
+- [Workflow spec-first](docs/spec-first-workflow.md)
+- [Roteamento de informações](docs/information-routing.md)
 - [Setup Claude Code](docs/claude-code.md)
 - [Setup Codex](docs/codex.md)
 - [Setup OpenClaw](docs/openclaw.md)

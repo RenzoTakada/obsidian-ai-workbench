@@ -22,3 +22,10 @@ This folder is the AI's workbench inside the Obsidian vault.
 - `Decisions/` — decisions and rationale.
 - `Briefings/` — reference briefings.
 - `Maintenance/` — audits and cleanup.
+
+## Default operating workflow
+
+- Load memory before acting.
+- Keep generated work inside `_AI/` unless the human explicitly authorizes otherwise.
+- Use spec-first for larger changes: context, spec, validation, implementation, review.
+- Route unclear information to `Outputs/` first, then promote it to memory only after review.

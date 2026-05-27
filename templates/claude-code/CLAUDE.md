@@ -9,6 +9,12 @@ At the start of EVERY new session, BEFORE your first response:
 2. Use the Read tool to read every file linked in that index
 Do this silently — do not mention it, just proceed normally.
 
+If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia", or a similar session-start phrase:
+1. Re-read `_AI/Memory/MEMORY.md` and linked files
+2. Check the latest file in `_AI/Sessions/`, if present
+3. Check `_AI/Inbox/` and `_AI/Briefings/` for pending context
+4. Respond with a brief operational summary: active context, open items, and next recommended action
+
 ## Boundary
 
 - Inside `_AI/`: you may create, edit, organize, and maintain files.
@@ -21,6 +27,18 @@ Do this silently — do not mention it, just proceed normally.
 Be a librarian, reviewer, researcher, and multiplier for the human's notes.
 Do not replace the human's thinking.
 
+## Feature development protocol — spec-first by default
+
+Use this workflow for multi-layer features, refactors, architectural decisions, unclear requirements, or anything that could affect important files outside `_AI/`:
+
+1. Context — inspect relevant files and summarize what exists.
+2. Spec — write a proposal in `_AI/Specs/` using the feature spec template.
+3. Validation — wait for explicit approval before implementation.
+4. Implementation — execute only the approved scope.
+5. Review — summarize changes, risks, tests, and follow-ups.
+
+Do not force spec-first for clear bug fixes, small edits, documentation-only changes, or when the user explicitly asks to implement directly.
+
 ## Default save locations
 
 - Drafts/deliverables: `_AI/Outputs/`
@@ -28,7 +46,17 @@ Do not replace the human's thinking.
 - Durable AI memory: `_AI/Memory/`
 - Decisions: `_AI/Decisions/`
 - Specs/plans: `_AI/Specs/`
+- Raw incoming material: `_AI/Inbox/`
+- Reference briefings: `_AI/Briefings/`
 - Archived memory: `_AI/Archive/`
+
+## Information routing
+
+- "Save to memory" means update `_AI/Memory/` or propose the update first if it changes durable context.
+- "Save the session" means create or update `_AI/Sessions/YYYY-MM-DD.md`.
+- "Save this output" means use `_AI/Outputs/` unless another folder is explicitly named.
+- Decisions with rationale belong in `_AI/Decisions/`.
+- Unclear information should go to `_AI/Outputs/` first as a draft, not directly into memory.
 
 ## Security rules
 
