@@ -12,6 +12,62 @@ Full model: [`docs/security-model.md`](docs/security-model.md)
 
 ---
 
+## What the installers change
+
+The installer scripts are local shell scripts. They do not require sudo. They may create or update:
+
+- A workbench folder inside your Obsidian vault, such as `_AI/`, `_Claude/`, `_Codex/`, or `_OpenClaw/`
+- Memory, session, output, spec, decision, maintenance, safety, archive, inbox, and briefing folders inside that workbench
+- Agent configuration files inside the workbench, such as `CLAUDE.md` or `AGENTS.md`
+- Shortcut commands in `~/.local/bin/`, such as `claude-brain`, `codex-brain`, or `openclaw-brain`
+- Agent-level configuration files, such as `~/.claude/CLAUDE.md`, when required by that agent
+- Your shell startup file only to add `~/.local/bin` to `PATH`, when needed
+
+The installers should not:
+
+- Ask for sudo
+- Modify files outside the selected vault except the documented shortcut and agent config files
+- Read secrets, private keys, browser cookies, or unrelated project files
+- Commit anything to Git automatically
+
+---
+
+## How to audit before installing
+
+Avoid running remote shell scripts blindly. Download, inspect, then execute:
+
+```bash
+curl -fsSL -o install-claude.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-claude.sh
+less install-claude.sh
+bash install-claude.sh
+```
+
+Repeat with `install-codex.sh` or `install-openclaw.sh` for other agents.
+
+Before running an installer, check:
+
+- Which files it writes under your vault
+- Whether it writes to `~/.local/bin/`
+- Whether it updates an agent config such as `~/.claude/CLAUDE.md`
+- Whether it changes your shell startup file to include `~/.local/bin`
+- Whether it attempts network access beyond downloading optional dependencies
+
+---
+
+## How to uninstall manually
+
+There is no destructive automatic uninstall by design. To remove a workbench manually:
+
+1. Back up anything you want to keep from the workbench folder.
+2. Remove the workbench folder from your vault, for example `_AI/` or `_Claude/`.
+3. Remove shortcuts from `~/.local/bin/`, for example `claude-brain`, `codex-brain`, or `openclaw-brain`.
+4. Review agent-level config files such as `~/.claude/CLAUDE.md` and remove the AI Workbench section if present.
+5. Optionally remove the `~/.local/bin` PATH line from your shell startup file if you no longer use it.
+
+Do not delete your entire Obsidian vault. Only remove the workbench folder created by this project.
+
+---
+
 ## Data that must never be committed
 
 - API keys, tokens, OAuth secrets

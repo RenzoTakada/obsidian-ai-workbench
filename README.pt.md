@@ -6,6 +6,12 @@
 
 ---
 
+## Status da branch
+
+Este repositório usa `one-brain` como branch principal para o setup de workbench único. Se o GitHub abrir outra branch por padrão, troque para `one-brain` para seguir o caminho de instalação documentado.
+
+---
+
 ## O que é isso?
 
 **Obsidian** é um aplicativo de notas que salva tudo em arquivos Markdown no seu computador — sem nuvem, sem lock-in. Muitas pessoas usam como segundo cérebro: guardam ideias, estudos, projetos e decisões de forma organizada e conectada.
@@ -128,6 +134,25 @@ bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-work
 bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh)
 ```
 
+Prefere auditar o instalador antes?
+
+```bash
+# Claude Code
+curl -fsSL -o install-claude.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-claude.sh
+less install-claude.sh
+bash install-claude.sh
+
+# Codex
+curl -fsSL -o install-codex.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-codex.sh
+less install-codex.sh
+bash install-codex.sh
+
+# OpenClaw
+curl -fsSL -o install-openclaw.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh
+less install-openclaw.sh
+bash install-openclaw.sh
+```
+
 O script vai perguntar:
 - Onde está seu vault do Obsidian
 - Seu nome
@@ -190,6 +215,16 @@ A IA é bibliotecária, revisora e multiplicadora — não é a autora do seu se
 
 ---
 
+## O que isto não é
+
+- Não é uma plataforma RAG completa nem um produto de banco vetorial.
+- Não substitui revisão, julgamento ou autoria humana das notas.
+- Não sincroniza automaticamente outputs da IA com notas pessoais.
+- Não garante privacidade se o agente usado envia contexto para um serviço cloud.
+- Não é gerenciador de segredo. Não salve tokens, senhas, chaves privadas ou dados de cliente na memória.
+
+---
+
 ## Segurança e manutenção da memória
 
 A IA tem seu próprio espaço de trabalho (`_AI/`) e não deve modificar suas notas sem autorização explícita.
@@ -207,6 +242,23 @@ Documentação completa: [`docs/security-model.md`](docs/security-model.md)
 
 ---
 
+## Demo
+
+Uma demo visual pode ser gravada a partir do roteiro em [`docs/demo-script.md`](docs/demo-script.md). O fluxo esperado é:
+
+1. Rodar o instalador.
+2. Abrir o workbench com `claude-brain`.
+3. Salvar uma pequena memória.
+4. Iniciar uma nova sessão e validar que o agente recupera contexto.
+
+---
+
+## Vault de exemplo
+
+Veja [`examples/minimal-vault`](examples/minimal-vault) para um workbench pequeno e anonimizado com memória, uma decisão, uma sessão e um output.
+
+---
+
 ## Quer usar vários agentes de IA?
 
 Se você quer Claude, Codex e OpenClaw trabalhando no mesmo vault — cada um na sua pasta — veja a [branch multi-brain](../../tree/multi-brain).
@@ -219,6 +271,8 @@ Se você quer Claude, Codex e OpenClaw trabalhando no mesmo vault — cada um na
 - [Contrato de comportamento do agente](docs/agent-behavior.md)
 - [Workflow spec-first](docs/spec-first-workflow.md)
 - [Roteamento de informações](docs/information-routing.md)
+- [Schema de memória](docs/memory-schema.md)
+- [Roteiro de demo](docs/demo-script.md)
 - [Setup Claude Code](docs/claude-code.md)
 - [Setup Codex](docs/codex.md)
 - [Setup OpenClaw](docs/openclaw.md)
