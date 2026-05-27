@@ -11,8 +11,8 @@ Human
 Obsidian vault
   stores local Markdown files
 
-AI tool
-  Claude Code, Codex, OpenClaw, Cursor, etc.
+Claude Code
+  terminal assistant working inside _AI/
 
 Optional embedding/search layer
   Ollama or another embedding provider

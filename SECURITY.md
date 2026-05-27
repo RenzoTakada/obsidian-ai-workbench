@@ -6,7 +6,7 @@ This project is about local AI workflows over personal notes. Security is a firs
 
 ## Overview
 
-AI agents run with the same filesystem permissions as the user. This project establishes a strict permission boundary: the agent works freely only inside its workbench folder (`_AI/`) and must ask for explicit confirmation before doing anything outside it.
+Claude Code runs with the same filesystem permissions as the user. This project establishes a strict permission boundary: Claude works freely only inside its workbench folder (`_AI/`) and must ask for explicit confirmation before doing anything outside it.
 
 Full model: [`docs/security-model.md`](docs/security-model.md)
 
@@ -16,17 +16,17 @@ Full model: [`docs/security-model.md`](docs/security-model.md)
 
 The installer scripts are local shell scripts. They do not require sudo. They may create or update:
 
-- A workbench folder inside your Obsidian vault, such as `_AI/`, `_Claude/`, `_Codex/`, or `_OpenClaw/`
+- A workbench folder inside your Obsidian vault: `_AI/`
 - Memory, session, output, spec, decision, maintenance, safety, archive, inbox, and briefing folders inside that workbench
-- Agent configuration files inside the workbench, such as `CLAUDE.md` or `AGENTS.md`
-- Shortcut commands in `~/.local/bin/`, such as `claude-brain`, `codex-brain`, or `openclaw-brain`
-- Agent-level configuration files, such as `~/.claude/CLAUDE.md`, when required by that agent
+- Claude Code configuration files inside the workbench, such as `CLAUDE.md` and `.claude/commands/*.md`
+- The shortcut command `~/.local/bin/claude-brain`
+- Claude Code user configuration, such as `~/.claude/CLAUDE.md`
 - Your shell startup file only to add `~/.local/bin` to `PATH`, when needed
 
 The installers should not:
 
 - Ask for sudo
-- Modify files outside the selected vault except the documented shortcut and agent config files
+- Modify files outside the selected vault except the documented shortcut and Claude Code config files
 - Read secrets, private keys, browser cookies, or unrelated project files
 - Commit anything to Git automatically
 
@@ -42,13 +42,11 @@ less install-claude.sh
 bash install-claude.sh
 ```
 
-Repeat with `install-codex.sh` or `install-openclaw.sh` for other agents.
-
 Before running an installer, check:
 
 - Which files it writes under your vault
 - Whether it writes to `~/.local/bin/`
-- Whether it updates an agent config such as `~/.claude/CLAUDE.md`
+- Whether it updates Claude Code config such as `~/.claude/CLAUDE.md`
 - Whether it changes your shell startup file to include `~/.local/bin`
 - Whether it attempts network access beyond downloading optional dependencies
 
@@ -59,9 +57,9 @@ Before running an installer, check:
 There is no destructive automatic uninstall by design. To remove a workbench manually:
 
 1. Back up anything you want to keep from the workbench folder.
-2. Remove the workbench folder from your vault, for example `_AI/` or `_Claude/`.
-3. Remove shortcuts from `~/.local/bin/`, for example `claude-brain`, `codex-brain`, or `openclaw-brain`.
-4. Review agent-level config files such as `~/.claude/CLAUDE.md` and remove the AI Workbench section if present.
+2. Remove the `_AI/` workbench folder from your vault.
+3. Remove `~/.local/bin/claude-brain`.
+4. Review Claude Code config files such as `~/.claude/CLAUDE.md` and remove the AI Workbench section if present.
 5. Optionally remove the `~/.local/bin` PATH line from your shell startup file if you no longer use it.
 
 Do not delete your entire Obsidian vault. Only remove the workbench folder created by this project.
@@ -113,7 +111,7 @@ When in doubt between acting automatically or asking for confirmation: **ask for
 
 ## Backup policy
 
-Before modifying any important file outside `_AI/`, the agent should:
+Before modifying any important file outside `_AI/`, Claude should:
 1. Propose the change in `_AI/Outputs/`
 2. Wait for user confirmation
 3. Create a backup if needed
@@ -132,7 +130,7 @@ Relevant actions are logged in `_AI/Logs/`:
 
 ## Memory is never modified automatically
 
-The agent never deletes or rewrites memory files without explicit user confirmation. It generates a proposal first and waits for approval.
+Claude never deletes or rewrites memory files without explicit user confirmation. It generates a proposal first and waits for approval.
 
 ---
 

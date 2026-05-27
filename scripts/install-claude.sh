@@ -3,7 +3,7 @@
 # install-claude.sh — Claude Code workbench installer
 # obsidian-ai-workbench | github.com/RenzoTakada/obsidian-ai-workbench
 #
-# Sets up _Claude/ inside your Obsidian vault with:
+# Sets up _AI/ inside your Obsidian vault with:
 #   - Auto-bootstrapping CLAUDE.md (memory loads before first response)
 #   - Pre-filled Memory/ files from your answers
 #   - claude-brain command
@@ -47,7 +47,7 @@ if [ -z "$DETECTED" ]; then
   ask "Vault path:"; read -rp "  > " DETECTED; DETECTED="${DETECTED/#\~/$HOME}"
 fi
 [ -d "$DETECTED" ] || fail "Not found: $DETECTED"
-VAULT="$DETECTED"; BRAIN="$VAULT/_Claude"
+VAULT="$DETECTED"; BRAIN="$VAULT/_AI"
 ok "Vault: $VAULT"
 
 # ── Wizard ────────────────────────────────────────────────────────────────────
@@ -55,11 +55,10 @@ step "Setup wizard"
 ask "Your name:"; read -rp "  > " NAME; NAME="${NAME:-User}"
 ask "Main projects (e.g. 'ProjectA, ProjectB'):"; read -rp "  > " PROJECTS
 ask "Language for Claude [pt-BR/en-US]:"; read -rp "  > " LANG; LANG="${LANG:-en-US}"
-ask "Other agent folders in this vault (e.g. '_OpenClaw, _Codex') or leave blank:"; read -rp "  > " OTHERS
 TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
-step "Creating _Claude/ structure"
+step "Creating _AI/ structure"
 for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Safety Skills Projects Briefings Inbox Archive Commands .claude/commands; do
   mkdir -p "$BRAIN/$d"
 done
@@ -67,10 +66,6 @@ ok "Folders created"
 
 # ── CLAUDE.md ─────────────────────────────────────────────────────────────────
 step "Creating CLAUDE.md"
-BOUNDARY=""
-for agent in $(echo "${OTHERS:-}" | tr ',' '\n' | xargs 2>/dev/null); do
-  [ -n "$agent" ] && BOUNDARY+=$'\n'"- Do not access \`${agent}/\` without explicit authorization."
-done
 
 if [ ! -f "$BRAIN/CLAUDE.md" ]; then
 cat > "$BRAIN/CLAUDE.md" << CLAUDEMD
@@ -94,18 +89,18 @@ If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia"
 
 ## Boundary
 
-- Inside \`_Claude/\`: free to create, edit, and organize.
-- Outside \`_Claude/\`: ask before reading or editing.${BOUNDARY}
+- Inside \`_AI/\`: free to create, edit, and organize.
+- Outside \`_AI/\`: ask before reading or editing.
 - Do not write permanent notes as if you were the human.
 
 ## Role
 
 Be a librarian, reviewer, researcher, and implementation assistant.
-Produce drafts, analysis, plans — they belong inside \`_Claude/\` until the human reviews them.
+Produce drafts, analysis, plans — they belong inside \`_AI/\` until the human reviews them.
 
 ## Feature development protocol — spec-first by default
 
-Use this workflow for multi-layer features, refactors, architectural decisions, unclear requirements, or anything that could affect important files outside \`_Claude/\`:
+Use this workflow for multi-layer features, refactors, architectural decisions, unclear requirements, or anything that could affect important files outside \`_AI/\`:
 
 1. Context — inspect relevant files and summarize what exists.
 2. Spec — write a proposal in \`Specs/\` using the feature spec template.
@@ -117,15 +112,15 @@ Do not force spec-first for clear bug fixes, small edits, documentation-only cha
 
 ## Workbench commands
 
-If slash commands are available, use the project commands in \`.claude/commands/\`:
+Use the native Claude Code project slash commands in \`.claude/commands/\`:
 
 - \`/brain\` — load memory, hot context, latest session, inbox, and briefings.
 - \`/context\` — summarize current context without modifying files.
 - \`/save\` — route information to the correct workbench folder.
 - \`/review-memory\` — audit memory and propose cleanup without applying changes automatically.
 - \`/spec\` — create a spec-first proposal in \`Specs/\`.
-
-If slash commands are not available, treat those command names as natural-language intents.
+- \`/chrome-ia\` — start a persistent Chrome debug profile on port 9222.
+- \`/chrome-dev-browser\` — connect to Chrome and inspect pages through DOM/HTML.
 
 ## Save locations
 
@@ -155,7 +150,7 @@ If slash commands are not available, treat those command names as natural-langua
 
 Full rules: \`Safety/SECURITY_RULES.md\` | Dangerous commands: \`Safety/DANGEROUS_COMMANDS.md\` | Sensitive paths: \`Safety/SENSITIVE_PATHS.md\`
 
-1. Never edit or delete files outside \`_Claude/\` without explicit confirmation.
+1. Never edit or delete files outside \`_AI/\` without explicit confirmation.
 2. Never run destructive commands without confirmation (rm -rf, git reset --hard, DROP, etc.).
 3. Never access sensitive paths (~/.ssh, ~/.aws, .env, etc.) without direct request.
 4. Never commit tokens, passwords, or secrets.
@@ -193,7 +188,7 @@ if ! grep -q "obsidian-ai-workbench" "$HOME/.claude/CLAUDE.md" 2>/dev/null; then
 At the start of any session, read \`${BRAIN}/Memory/MEMORY.md\` and all linked files — silently, before the first response.
 
 ## Rules
-- Inside \`_Claude/\`: free to create, edit, organize.
+- Inside \`_AI/\`: free to create, edit, organize.
 - Outside: ask first.
 - Do not write permanent notes as if you were the human.
 GLOBAL
@@ -215,7 +210,7 @@ Read this file at the start of every session, then read all linked files.
 - [User profile](user_profile.md) — who is the user, stack, tools, preferences
 
 ## Setup
-- [Vault setup](project_vault_setup.md) — vault structure, agent folders
+- [Vault setup](project_vault_setup.md) — vault and workbench structure
 
 ## Hot context
 - [Hot context](hot.md) — short-lived context for the next session
@@ -240,7 +235,7 @@ created: ${TODAY}
 Vault: \`${VAULT}\`
 Workbench: \`${BRAIN}\`
 
-Outside \`_Claude/\`: ask before reading or editing.
+Outside \`_AI/\`: ask before reading or editing.
 SETUP
 [ ! -f "$BRAIN/Memory/hot.md" ] && cat > "$BRAIN/Memory/hot.md" << HOT
 # Hot Context
@@ -279,15 +274,15 @@ step "Creating Safety/ files"
 ## Core principle
 Least privilege. When in doubt, ask for confirmation.
 
-## Free to do — inside `_Claude/`
+## Free to do — inside `_AI/`
 Create, edit, organize, delete files, logs, outputs, specs, sessions, memory.
 
 ## Requires explicit confirmation
-Any action outside `_Claude/`: reading, editing, creating, or moving files.
+Any action outside `_AI/`: reading, editing, creating, or moving files.
 Before acting: show a summary and wait for confirmation.
 
 ## Never — without exception
-1. Edit or delete files outside `_Claude/` without explicit confirmation
+1. Edit or delete files outside `_AI/` without explicit confirmation
 2. Run destructive commands without confirmation (see DANGEROUS_COMMANDS.md)
 3. Access sensitive paths without authorization (see SENSITIVE_PATHS.md)
 4. Commit, display, or copy tokens, passwords, private keys, or secrets
@@ -297,7 +292,7 @@ Before acting: show a summary and wait for confirmation.
 8. Assume a prior authorization applies to a different context
 
 ## Logging
-Log in `Logs/` whenever modifying memory, acting outside `_Claude/`, or running high-impact commands.
+Log in `Logs/` whenever modifying memory, acting outside `_AI/`, or running high-impact commands.
 SRULES
 
 [ ! -f "$BRAIN/Safety/DANGEROUS_COMMANDS.md" ] && cat > "$BRAIN/Safety/DANGEROUS_COMMANDS.md" << 'DCMDS'
@@ -321,7 +316,7 @@ chmod -R | chown -R
 docker rm | docker rmi | docker volume rm | docker system prune | docker-compose down -v
 
 ## Any command that:
-- Modifies files outside `_Claude/`
+- Modifies files outside `_AI/`
 - Accesses or modifies .git/
 - Reads or writes credentials or tokens
 - Removes data irreversibly
@@ -565,13 +560,15 @@ step "Creating command prompts"
 [ ! -f "$BRAIN/Commands/README.md" ] && cat > "$BRAIN/Commands/README.md" << 'CREADME'
 # Workbench Commands
 
-These commands are behavior contracts. Claude Code can use the matching files in `.claude/commands/`; other agents can treat them as natural-language intents.
+These commands are native Claude Code project slash commands backed by `.claude/commands/`.
 
 - `/brain` — load memory, hot context, latest session, inbox, and briefings.
 - `/context` — summarize current context without changing files.
 - `/save` — route information to the correct workbench folder.
 - `/review-memory` — audit memory and propose cleanup.
 - `/spec` — create a spec-first implementation proposal.
+- `/chrome-ia` — start a persistent Chrome debug profile on port 9222.
+- `/chrome-dev-browser` — inspect authenticated Chrome pages through DOM/HTML.
 CREADME
 
 [ ! -f "$BRAIN/.claude/commands/brain.md" ] && cat > "$BRAIN/.claude/commands/brain.md" << 'CBRAIN'
@@ -645,7 +642,7 @@ CREVIEW
 
 Create a spec-first proposal before implementation.
 
-Use this for multi-layer changes, refactors, architecture decisions, unclear requirements, or changes outside `_Claude/`.
+Use this for multi-layer changes, refactors, architecture decisions, unclear requirements, or changes outside `_AI/`.
 
 Steps:
 
@@ -656,6 +653,158 @@ Steps:
 
 Do not implement until the spec is approved unless the user explicitly says to implement directly.
 CSPEC
+
+[ ! -f "$BRAIN/.claude/commands/chrome-ia.md" ] && cat > "$BRAIN/.claude/commands/chrome-ia.md" << 'CCHROMEIA'
+# /chrome-ia
+
+Start Google Chrome with remote debugging enabled on port 9222, using a dedicated persistent profile (`~/.chrome-debug-profile`) that preserves sessions between uses.
+
+Important: Chrome 148+ blocks debugging when `--user-data-dir` points to the default profile. Use `~/.chrome-debug-profile` instead: a separate but persistent profile. The user logs in once and sessions remain available for future sessions.
+
+Use this to open Chrome before an investigation session. After the user logs in once, Claude can connect through `/chrome-dev-browser`.
+
+---
+
+## Steps
+
+1. Check whether Chrome is already running with debug on port 9222:
+
+   ```bash
+   curl -s http://127.0.0.1:9222/json/version
+   ```
+
+   - If it responds, report that Chrome is already active with debug. Do not restart it.
+   - If it does not respond, continue to step 2.
+
+2. Check whether Chrome is running without debug:
+
+   ```bash
+   pgrep -f "Google Chrome" | head -1
+   ```
+
+   - If a process exists, close it with `pkill -f "Google Chrome" 2>/dev/null; sleep 1`, then continue.
+   - If no process exists, continue to step 3.
+
+3. Create the debug profile directory if needed and open Chrome:
+
+   ```bash
+   mkdir -p "$HOME/.chrome-debug-profile"
+   nohup "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+     --remote-debugging-port=9222 \
+     --remote-allow-origins="*" \
+     --no-first-run \
+     --no-default-browser-check \
+     --user-data-dir="$HOME/.chrome-debug-profile" \
+     > /tmp/chrome-debug.log 2>&1 &
+   ```
+
+4. Wait 6 seconds and confirm that the port responds:
+
+   ```bash
+   sleep 6 && curl -s http://127.0.0.1:9222/json/version
+   ```
+
+   - If it fails, show the log with `cat /tmp/chrome-debug.log | head -20`.
+
+5. Connect and list open tabs:
+
+   ```js
+   dev-browser --connect http://127.0.0.1:9222 <<'EOF'
+   const tabs = await browser.listPages();
+   console.log(JSON.stringify(tabs, null, 2));
+   EOF
+   ```
+
+6. Return confirmation with:
+
+   - Number of open tabs.
+   - If this is the first time: "New debug profile. Log in to the sites you need. Sessions will be saved in `~/.chrome-debug-profile` for future use."
+   - If sessions already exist: "Chrome is ready with saved sessions. Use `/chrome-dev-browser [instruction]` when you want me to access something."
+
+---
+
+Do not close Chrome when finished. It should remain open for use with `/chrome-dev-browser`.
+
+Never run `pkill` after Chrome is already running with debug enabled. Only close Chrome when needed before reopening it with debug.
+CCHROMEIA
+
+[ ! -f "$BRAIN/.claude/commands/chrome-dev-browser.md" ] && cat > "$BRAIN/.claude/commands/chrome-dev-browser.md" << 'CCHROMEDEV'
+# /chrome-dev-browser
+
+Connect to the Chrome instance opened by `/chrome-ia` and run an investigation or task through DOM/HTML without relying on screenshots.
+
+Use this to read private pages, extract merge request diffs, search table data, navigate authenticated flows, and investigate internal environments.
+
+Prerequisite: Chrome was started with `/chrome-ia` and the user is already logged in where needed.
+
+---
+
+## Steps
+
+1. Check whether Chrome is accessible:
+
+   ```bash
+   curl -s http://127.0.0.1:9222/json/version
+   ```
+
+   - If it does not respond, tell the user to run `/chrome-ia` first.
+
+2. List open tabs to understand the current context:
+
+   ```js
+   dev-browser --connect http://127.0.0.1:9222 <<'EOF'
+   const tabs = await browser.listPages();
+   console.log(JSON.stringify(tabs, null, 2));
+   EOF
+   ```
+
+3. Execute the task passed as the argument. Use this strategy by task type:
+
+   **Page reading / data extraction:**
+
+   - Use `page.snapshotForAI()` to get the complete structure as text, including accessibility and content.
+   - It returns `{ full, incremental? }`; read `result.full` to map elements and content.
+   - Prefer snapshot over screenshot for any text or data task.
+
+   **Navigation:**
+
+   - Use `await page.goto(url, { waitUntil: "domcontentloaded" })` for normal pages.
+   - Use `waitUntil: "load"` only when external resources must finish loading.
+
+   **Interaction:**
+
+   - After snapshot, use `page.getByRole()` to interact with elements by semantic role.
+   - Example: `await page.getByRole("button", { name: "Approve" }).click()`.
+
+   **Merge request diff extraction:**
+
+   - Navigate to the MR Changes tab.
+   - Extract text with `page.innerHTML(".diff-content")` or a snapshot of the diff area.
+   - Save to a temp file only when needed.
+
+   **Screenshot:**
+
+   - Use screenshots only when visual layout matters.
+   - Example:
+
+     ```js
+     const buf = await page.screenshot();
+     const path = await saveScreenshot(buf, "name.png");
+     ```
+
+4. Process extracted data directly in the response when possible.
+
+5. Report the result to the user and wait for the next instruction. Keep the connection open and do not close named pages.
+
+---
+
+## Notes
+
+- Named pages (`browser.getPage("name")`) persist between executions while the daemon is running. Use descriptive names such as `"gitlab"`, `"dynatrace"`, or `"backoffice"`.
+- Inside `page.evaluate()`, use plain JavaScript only.
+- If a script fails, reconnect to the same named page and take a screenshot for diagnosis.
+- Do not close Chrome, do not stop the daemon, and do not take destructive actions without confirmation.
+CCHROMEDEV
 ok "Command prompts created"
 
 # ── Logs README ───────────────────────────────────────────────────────────────
@@ -667,7 +816,7 @@ One file per day: YYYY-MM-DD.md
 ## What to log
 - Memory file creation or modification
 - Memory review or cleanup proposals
-- Actions outside `_Claude/` (with authorization)
+- Actions outside `_AI/` (with authorization)
 - Attempted access to sensitive paths
 - High-impact command execution
 - Important decisions

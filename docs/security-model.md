@@ -1,20 +1,20 @@
 # Security Model
 
-This document defines the operational security model for AI agents working inside an Obsidian vault using this workbench architecture.
+This document defines the operational security model for Claude Code working inside an Obsidian vault using this workbench architecture.
 
 ---
 
 ## Objective
 
-AI agents are powerful but operate with the same filesystem permissions as the user. Without clear rules, an agent can accidentally read sensitive files, modify notes it shouldn't touch, or commit data that should never leave the machine.
+Claude Code is powerful but operates with the same filesystem permissions as the user. Without clear rules, it can accidentally read sensitive files, modify notes it shouldn't touch, or commit data that should never leave the machine.
 
-This model establishes a permission boundary: the agent works freely inside its workbench folder and asks for explicit confirmation before doing anything outside it.
+This model establishes a permission boundary: Claude works freely inside `_AI/` and asks for explicit confirmation before doing anything outside it.
 
 ---
 
 ## What the AI can do freely
 
-Inside `_AI/` (or the agent-specific folder):
+Inside `_AI/`:
 - Create, edit, organize, and delete files
 - Create logs, outputs, specs, sessions, memory files, briefings, decisions
 - Generate proposals for changes outside its folder
@@ -40,7 +40,6 @@ Inside `_AI/` (or the agent-specific folder):
 |---|---|
 | `_AI/` | Full — create, edit, organize, delete |
 | Rest of the vault | Read/write only with explicit authorization |
-| Agent-specific folders (`_Claude/`, `_Codex/`, `_OpenClaw/`) | Only the agent's own folder |
 
 ---
 
@@ -146,7 +145,7 @@ The cost of asking is low. The cost of an unwanted action can be high.
 ## Using this project with corporate data
 
 If your vault contains corporate or client data:
-- Keep sensitive notes outside `_AI/` (the agent cannot access them without authorization)
-- Never authorize the agent to read files containing credentials or PII
+- Keep sensitive notes outside `_AI/` (Claude should not access them without authorization)
+- Never authorize Claude to read files containing credentials or PII
 - Review `_AI/Outputs/` before committing anything to a shared repository
 - Do not use cloud-synced vaults if the data is confidential

@@ -1,6 +1,6 @@
 # Memory Schema
 
-The memory folder is an interoperability contract for terminal AI agents. It keeps durable context small, explicit, and easy to audit.
+The memory folder is the durable context contract for Claude Code. It keeps context small, explicit, and easy to audit.
 
 ## Core principles
 
@@ -17,8 +17,6 @@ Default path:
 ```text
 _AI/Memory/
 ```
-
-Agent-specific installers may use equivalent folders such as `_Claude/Memory/`.
 
 ## MEMORY.md
 
@@ -118,14 +116,14 @@ Decisions can live in `_AI/Decisions/` and be linked from memory when they are i
 
 ## feedback_*.md
 
-Purpose: reusable feedback about how the agent should work with the human.
+Purpose: reusable feedback about how Claude should work with the human.
 
 Examples:
 
 - Preferred answer style
 - Review standards
 - Planning preferences
-- Things the agent should avoid repeating
+- Things Claude should avoid repeating
 
 Keep feedback general. Do not use it as a transcript store.
 

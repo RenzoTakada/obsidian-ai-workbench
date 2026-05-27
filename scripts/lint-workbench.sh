@@ -17,14 +17,14 @@ find_workbench() {
     return
   fi
 
-  for candidate in "$ROOT/_AI" "$ROOT/_Claude" "$ROOT/_Codex" "$ROOT/_OpenClaw"; do
+  for candidate in "$ROOT/_AI"; do
     if [ -d "$candidate" ]; then
       printf '%s\n' "$candidate"
       return
     fi
   done
 
-  find "$ROOT" -maxdepth 3 -type d \( -name '_AI' -o -name '_Claude' -o -name '_Codex' -o -name '_OpenClaw' \) | head -n 1
+  find "$ROOT" -maxdepth 3 -type d -name '_AI' | head -n 1
 }
 
 BRAIN="$(find_workbench)"

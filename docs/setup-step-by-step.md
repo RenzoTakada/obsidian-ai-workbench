@@ -8,59 +8,30 @@ Create a local Obsidian vault, for example:
 ~/Documents/MyVault
 ```
 
-## 2. Create the AI workbench
-
-Copy the generic template:
+## 2. Run the Claude Code installer
 
 ```bash
-cp -R templates/generic/_AI ~/Documents/MyVault/_AI
+bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-claude.sh)
 ```
 
-Or create it manually:
+The installer creates `_AI/`, writes `CLAUDE.md`, creates native slash commands in `_AI/.claude/commands/`, and installs `claude-brain`.
+
+## 3. Start Claude Code
 
 ```bash
-mkdir -p ~/Documents/MyVault/_AI/{Inbox,Outputs,Logs,Memory,Sessions,Projects,Specs,Skills,Templates,Decisions,Briefings,Maintenance}
+claude-brain
 ```
 
-## 3. Choose your AI tool
-
-### Claude Code
-
-Copy:
+Or manually:
 
 ```bash
-cp templates/claude-code/CLAUDE.md ~/Documents/MyVault/_AI/CLAUDE.md
-```
-
-Then run Claude Code with the vault or `_AI/` as the working directory, depending on the level of access you want.
-
-### Codex
-
-Copy:
-
-```bash
-cp templates/codex/AGENTS.md ~/Documents/MyVault/_AI/AGENTS.md
-```
-
-Then run Codex with `_AI/` as the working directory, or with the vault root only if your instruction file clearly protects human notes.
-
-### OpenClaw
-
-Copy:
-
-```bash
-cp -R templates/openclaw/* ~/Documents/MyVault/_AI/
-```
-
-Set OpenClaw workspace to:
-
-```text
-~/Documents/MyVault/_AI
+cd ~/Documents/MyVault/_AI
+claude
 ```
 
 ## 4. Add the boundary rule
 
-Tell your AI:
+This is already written into `_AI/CLAUDE.md`:
 
 ```text
 Inside _AI/: you may work autonomously.

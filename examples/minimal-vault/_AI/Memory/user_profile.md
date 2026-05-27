@@ -17,4 +17,4 @@ Language: en-US
 ## Tools
 
 - Obsidian
-- Terminal AI agent
+- Claude Code

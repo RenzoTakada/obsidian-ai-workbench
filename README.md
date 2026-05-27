@@ -1,289 +1,186 @@
-# obsidian-ai-workbench — one-brain
+# obsidian-ai-workbench
 
-> One Obsidian vault. One AI brain. Always remembers you.
+> One Obsidian vault. One Claude Code workbench. Native slash commands. Persistent memory.
 
-[Leia em Português](README.pt.md)
-
----
-
-## Branch status
-
-This repository currently uses `one-brain` as the primary branch for the single-workbench setup. If GitHub opens another branch by default, switch to `one-brain` to follow the documented installation path.
+[Leia em Portugues](README.pt.md)
 
 ---
 
-## What is this?
+## What Is This?
 
-**Obsidian** is a note-taking app that saves everything as Markdown files on your computer — no cloud, no lock-in. Many people use it as a second brain: capturing ideas, studies, projects, and decisions in an organized and connected way.
+**Obsidian** stores your notes as local Markdown files.
 
-**Claude Code, Codex, and OpenClaw** are AI assistants that run in your terminal. They read and write files, execute code, research, and analyze. If configured correctly, they can work directly inside your Obsidian vault.
+**Claude Code** is a terminal coding assistant that can read and write files, run commands, inspect projects, and help with research or implementation.
 
-**This project** is the template that connects the two the right way.
-
----
-
-## Why use AI with Obsidian?
-
-Imagine having an assistant that:
-
-- Reads your notes and understands the context of your work
-- Researches, summarizes, and produces drafts based on what you already know
-- Remembers your projects, preferences, and decisions between sessions
-- Organizes outputs and logs in your vault without cluttering your notes
-
-That's what you get when AI and Obsidian work together correctly.
+**obsidian-ai-workbench** connects them with a safe structure: Claude works inside an isolated `_AI/` folder, loads durable memory at session start, and exposes native Claude Code slash commands such as `/brain` and `/save`.
 
 ---
 
-## The problem — and why most people get it wrong
+## Why This Exists
 
-When people try to use AI with Obsidian without a proper structure, two things happen:
+Without structure, two things usually happen:
 
-**1. The vault gets polluted**
-The AI starts generating notes, summaries, and drafts — and all of it mixes with your own notes. You lose track of what's yours and what was generated. Your second brain becomes a dump for AI content.
+- AI-generated notes get mixed with your personal notes.
+- Every new AI session starts without memory of your projects, preferences, and decisions.
 
-**2. The AI forgets everything**
-Every time you open a new session, you have to explain from scratch who you are, what you're working on, and what your projects are. Without persistent memory, the AI never learns about you.
-
----
-
-## What this project solves
-
-### Isolation — each in its own space
-
-Your notes stay untouched. The AI works in a separate folder (`_AI/`) inside the vault:
+This project fixes that by giving Claude Code a dedicated workbench inside your vault.
 
 ```
 YourVault/
-  Your notes...       ← where you think
-  └── _AI/            ← where the AI works
+  Your notes...       <- where you think
+  _AI/                <- where Claude works
 ```
 
-The AI doesn't touch your notes unless you explicitly authorize it.
-
-### Persistent memory — it always remembers you
-
-The installer creates pre-filled memory files with your name, projects, and preferences. The agent's config file contains a special directive:
-
-```
-## MANDATORY SESSION BOOTSTRAP
-
-At the start of EVERY new session, BEFORE your first response:
-1. Read _AI/Memory/MEMORY.md
-2. Read every file linked in that index
-Do this silently — do not mention it, just proceed normally.
-```
-
-This forces the agent to silently load the memory before responding. You never have to say "remember who I am" again — it already knows.
-
-### Operating contract — context before action
-
-The workbench also ships with reusable behavior rules for agents:
-
-- Session-start phrases such as "ready", "start", "load context", "pronto", and "inicia" refresh memory, sessions, inbox, and briefings.
-- Command intents such as `/brain`, `/context`, `/save`, `/review-memory`, and `/spec` standardize common workflows.
-- `Memory/hot.md` keeps short-lived context for the next session.
-- Larger changes use a spec-first workflow: context, spec, validation, implementation, review.
-- Information has explicit destinations: memory, sessions, outputs, specs, decisions, logs, inbox, briefings, and archive.
-
-### One-command setup
-
-No manual configuration. One script does everything: creates the folders, writes the config files, fills in the initial memory, and installs a shortcut command.
+Claude does not touch your notes outside `_AI/` unless you explicitly authorize it.
 
 ---
 
-## What you gain
+## What You Get
 
 | Before | After |
 |---|---|
-| AI forgets everything each session | AI remembers your projects and preferences automatically |
-| AI notes mixed with your own | Clean vault — AI isolated in `_AI/` |
-| Manual, tedious configuration | One command installs everything |
-| You explain context every time | Context loaded automatically |
+| Claude forgets context every session | Memory loads automatically |
+| AI drafts mixed with your notes | Generated work stays in `_AI/` |
+| Ad hoc prompts | Native slash commands |
+| Manual setup | One installer |
 
 ---
 
-## What you need to install
+## Native Slash Commands
+
+The installer creates Claude Code project commands in `_AI/.claude/commands/`:
+
+| Command | Purpose |
+|---|---|
+| `/brain` | Load memory, hot context, latest session, inbox, and briefings |
+| `/context` | Summarize current context without changing files |
+| `/save` | Route information to memory, outputs, sessions, decisions, specs, inbox, or hot context |
+| `/review-memory` | Audit memory and create a cleanup proposal |
+| `/spec` | Create a spec-first proposal before implementation |
+| `/chrome-ia` | Start a persistent Chrome debug profile on port 9222 |
+| `/chrome-dev-browser` | Connect to that Chrome session and inspect pages via DOM/HTML |
+
+Chrome commands require Google Chrome on macOS and the `dev-browser` CLI available in `PATH`.
+
+See [docs/commands.md](docs/commands.md).
+
+---
+
+## Requirements
 
 | Tool | Required | How to install |
 |---|---|---|
 | [Obsidian](https://obsidian.md) | Yes | Download at obsidian.md |
-| One of the agents below | Yes | See options |
+| [Claude Code](https://claude.ai/code) | Yes | Download at claude.ai/code |
 | [Ollama](https://ollama.ai) | Optional | For local semantic memory search |
-
-**Choose your AI agent:**
-
-| Agent | How to install |
-|---|---|
-| [Claude Code](https://claude.ai/code) | Download at claude.ai/code |
-| [OpenAI Codex](https://github.com/openai/codex) | `npm install -g @openai/codex` |
-| [OpenClaw](https://openclaw.ai) | See openclaw.ai |
 
 ---
 
 ## Install
 
-Pick your agent and run the command:
-
 ```bash
-# Claude Code
 bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-claude.sh)
-
-# Codex
-bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-codex.sh)
-
-# OpenClaw
-bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh)
 ```
 
 Prefer to audit the installer first?
 
 ```bash
-# Claude Code
 curl -fsSL -o install-claude.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-claude.sh
 less install-claude.sh
 bash install-claude.sh
-
-# Codex
-curl -fsSL -o install-codex.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-codex.sh
-less install-codex.sh
-bash install-codex.sh
-
-# OpenClaw
-curl -fsSL -o install-openclaw.sh https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-workbench/one-brain/scripts/install-openclaw.sh
-less install-openclaw.sh
-bash install-openclaw.sh
 ```
 
-The script will ask:
-- Where your Obsidian vault is
-- Your name
-- Your current projects
-- Your preferred language
+The script asks for:
 
-Then it creates everything automatically.
+- your Obsidian vault path;
+- your name;
+- your current projects;
+- your preferred language.
 
-### After install
+Then start Claude Code inside the workbench:
 
 ```bash
-claude-brain      # opens Claude Code inside your workbench
-codex-brain       # opens Codex inside your workbench
-openclaw-brain    # opens OpenClaw inside your workbench
+claude-brain
+```
+
+Or manually:
+
+```bash
+cd /path/to/YourVault/_AI
+claude
 ```
 
 ---
 
-## What the installer creates
+## What The Installer Creates
 
 ```
 YourVault/
   _AI/
-    CLAUDE.md (or AGENTS.md)     ← config with memory auto-bootstrap
+    CLAUDE.md                  <- Claude Code instructions and memory bootstrap
+    .claude/commands/          <- native Claude Code slash commands
+    Commands/                  <- command documentation
     Memory/
-      MEMORY.md                  ← memory index (pre-filled)
-      hot.md                     ← short-lived context for the next session
-      user_profile.md            ← your name, projects, preferences
-      project_vault_setup.md     ← vault paths and structure
-    Commands/                    ← command intent documentation
-    .claude/commands/            ← Claude Code slash command prompts
-    Sessions/                    ← notes from each session
-    Outputs/                     ← AI-generated drafts and deliverables
-    Specs/                       ← plans and specifications
-    Decisions/                   ← decisions and rationale
-    Templates/                   ← reusable templates (memory review, etc.)
-    Logs/                        ← session action logs
-    Maintenance/                 ← memory review and cleanup routines
-    Safety/                      ← security rules, dangerous commands, sensitive paths
-    Archive/                     ← archived memory and past contexts
-    Skills/
+      MEMORY.md                <- memory index
+      hot.md                   <- short-lived context for the next session
+      user_profile.md          <- your profile and preferences
+      project_vault_setup.md   <- vault/workbench setup
+    Sessions/                  <- session notes
+    Outputs/                   <- AI-generated drafts and deliverables
+    Specs/                     <- specs and implementation plans
+    Decisions/                 <- decisions and rationale
+    Templates/                 <- reusable templates
+    Logs/                      <- operational logs
+    Maintenance/               <- memory review routines
+    Safety/                    <- security rules
+    Archive/                   <- old but useful context
     Projects/
     Briefings/
     Inbox/
 
-~/.local/bin/claude-brain        ← shortcut command
-~/.claude/CLAUDE.md              ← updated with workbench path
+~/.local/bin/claude-brain      <- shortcut command
+~/.claude/CLAUDE.md            <- global pointer to the workbench
 ```
 
 ---
 
-## The three flows
+## Safety Model
 
-```
-[You think]       Your Obsidian notes, Zettelkasten, projects
-      ↓ authorize
-[AI works]        _AI/ — isolated from your notes
-      ↓ you review
-[You decide]      What gets promoted to your permanent notes
-```
+Claude is a librarian, reviewer, and multiplier, not the author of your second brain.
 
-The AI is a librarian, reviewer, and multiplier — not the author of your second brain.
+- Everything Claude creates stays in `_AI/` by default.
+- Files outside `_AI/` require explicit authorization before reading or editing.
+- Memory cleanup is proposed first and applied only after confirmation.
+- Dangerous commands require explicit confirmation.
+- Secrets, tokens, private keys, and client data should not be stored in memory.
 
----
-
-## What this is not
-
-- Not a full RAG platform or vector database product.
-- Not a replacement for human review, judgment, or ownership of notes.
-- Not an automatic sync layer between AI output and personal notes.
-- Not a privacy guarantee if the AI agent you use sends context to a cloud service.
-- Not a secret manager. Do not store tokens, passwords, private keys, or client data in memory.
-
----
-
-## Safety and memory maintenance
-
-The AI has its own workspace (`_AI/`) and must not modify your notes without explicit authorization.
-
-- **Isolation**: everything the AI creates stays in `_AI/`. Your notes are not touched without authorization.
-- **Memory reviewed periodically**: memory accumulates over time — review it to keep context clean and relevant.
-- **Cleanup is never automatic**: when you ask to "review memory" or run a "health check", the AI generates a proposal. You confirm before any change.
-- **Logs**: relevant actions are recorded in `_AI/Logs/`.
-- **Dangerous commands**: any destructive command requires explicit confirmation.
-- **Sensitive data is not versioned**: tokens, passwords, and credentials must never be committed.
-- **Outputs are reviewed by you**: AI-generated drafts stay in `_AI/Outputs/` until you decide what to promote.
-
-Full documentation: [`docs/security-model.md`](docs/security-model.md)
-
+Full documentation: [docs/security-model.md](docs/security-model.md).
 
 ---
 
 ## Demo
 
-A visual demo can be recorded from the script in [`docs/demo-script.md`](docs/demo-script.md). The intended flow is:
+See [docs/demo-script.md](docs/demo-script.md). The intended flow:
 
 1. Run the installer.
 2. Open the workbench with `claude-brain`.
-3. Save a small memory entry.
-4. Start a new session and verify that the agent recovers context.
-
----
-
-## Example vault
-
-See [`examples/demo-vault`](examples/demo-vault) for an anonymized workbench with memory, hot context, command prompts, a decision, a spec, a session, an output, a memory graph, and an Obsidian canvas.
-
----
-
-## Using multiple AI agents?
-
-If you want Claude, Codex, and OpenClaw working in the same vault — each in their own folder — see the [multi-brain branch](../../tree/multi-brain).
+3. Save a small memory entry with `/save`.
+4. Start a new session and run `/brain`.
 
 ---
 
 ## Documentation
 
-- [How it works — three flows](docs/system.md)
+- [How it works](docs/system.md)
+- [Claude Code setup](docs/claude-code.md)
 - [Workbench commands](docs/commands.md)
-- [Agent behavior contract](docs/agent-behavior.md)
+- [Claude Code behavior contract](docs/claude-code-behavior.md)
 - [Spec-first workflow](docs/spec-first-workflow.md)
 - [Information routing](docs/information-routing.md)
 - [Memory schema](docs/memory-schema.md)
 - [Optional Obsidian MCP](docs/mcp-obsidian.md)
 - [Workbench lint](docs/lint-workbench.md)
 - [Demo script](docs/demo-script.md)
-- [Claude Code setup](docs/claude-code.md)
-- [Codex setup](docs/codex.md)
-- [OpenClaw setup](docs/openclaw.md)
 - [Ollama embeddings](docs/ollama-embeddings.md)
 - [Maintenance guide](docs/maintenance.md)
 

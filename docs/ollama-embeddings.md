@@ -8,7 +8,7 @@ Ollama can run a local embedding model. Embeddings help the AI search your Markd
 
 ```text
 Obsidian = visual editor for Markdown files
-AI tool = reads files and answers questions
+Claude Code = reads files and answers questions
 Ollama = local semantic search helper
 ```
 
@@ -35,29 +35,12 @@ nomic-embed-text
 
 It is small enough for local use and works well for text memory search.
 
-## Tool-specific configuration
+## Claude Code usage
 
-Each AI tool handles embeddings differently. For OpenClaw:
-
-```json5
-{
-  agents: {
-    defaults: {
-      memorySearch: {
-        provider: "ollama",
-        model: "nomic-embed-text",
-        remote: {
-          baseUrl: "http://127.0.0.1:11434",
-          nonBatchConcurrency: 1
-        }
-      }
-    }
-  }
-}
-```
+Claude Code works with the Markdown files directly. Ollama is optional helper infrastructure for local semantic search workflows; it is not required for the native slash commands.
 
 ## Important clarification
 
 Ollama does not talk to Obsidian directly.
 
-The AI tool reads Markdown files from disk, asks Ollama for embeddings, and uses those embeddings to search better.
+Claude reads Markdown files from disk. Optional search scripts can ask Ollama for embeddings and use those embeddings to search better.

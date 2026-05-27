@@ -9,11 +9,11 @@ The demo vault has memory, hot context, command prompts, and a session note.
 
 ## Problem
 
-New users need to see that the agent can recover context in a new session.
+New users need to see that Claude can recover context in a new session.
 
 ## Goal
 
-Show a short flow where the agent loads memory and summarizes active context after `/brain`.
+Show a short flow where Claude loads memory and summarizes active context after `/brain`.
 
 ## Non-goals
 
@@ -26,6 +26,6 @@ Use `Memory/MEMORY.md` as the durable index and `Memory/hot.md` as short-lived c
 
 ## Validation plan
 
-- Start a new agent session.
+- Start a new Claude Code session.
 - Run `/brain`.
 - Confirm the response mentions active focus, recent decisions, blocker, and next actions.

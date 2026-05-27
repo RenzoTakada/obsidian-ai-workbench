@@ -1,6 +1,6 @@
 # Workbench Commands
 
-The workbench defines a small command vocabulary for agents. Claude Code can use these as project slash commands from `.claude/commands/`; other agents can treat the same names as natural-language intents.
+The workbench defines native Claude Code project slash commands in `_AI/.claude/commands/`.
 
 ## Commands
 
@@ -11,6 +11,8 @@ The workbench defines a small command vocabulary for agents. Claude Code can use
 | `/save` | Route information to the correct workbench folder | Yes, with routing rules |
 | `/review-memory` | Audit memory and generate a cleanup proposal | Yes, proposal only |
 | `/spec` | Create a spec-first proposal before implementation | Yes, spec only |
+| `/chrome-ia` | Start a persistent Chrome debug profile on port 9222 | May start/stop Chrome |
+| `/chrome-dev-browser` | Connect to Chrome and inspect authenticated pages through DOM/HTML | No by default |
 
 ## `/brain`
 
@@ -27,7 +29,7 @@ The output should be a concise summary with active context, open items, and next
 
 ## `/context`
 
-Summarizes what the agent currently knows. It should not modify files.
+Summarizes what Claude currently knows. It should not modify files.
 
 ## `/save`
 
@@ -40,3 +42,19 @@ Generates a memory health proposal in `_AI/Outputs/`. It must not mutate memory 
 ## `/spec`
 
 Creates a proposal in `_AI/Specs/` using the feature spec template. It stops before implementation unless explicitly approved.
+
+## `/chrome-ia`
+
+Starts Google Chrome with remote debugging enabled on port 9222 using a dedicated persistent profile at `~/.chrome-debug-profile`.
+
+Use this before browser investigations that need an authenticated Chrome session.
+
+Requires Google Chrome on macOS.
+
+## `/chrome-dev-browser`
+
+Connects to the Chrome session opened by `/chrome-ia` through `dev-browser`.
+
+Use this to inspect private pages, extract data, navigate authenticated flows, and read DOM/HTML content without relying on screenshots.
+
+Requires the `dev-browser` CLI available in `PATH`.

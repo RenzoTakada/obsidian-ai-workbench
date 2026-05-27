@@ -4,7 +4,7 @@ This script can be used to record a GIF or asciinema demo.
 
 ## Goal
 
-Show that the workbench can install, store memory, and recover context in a new agent session.
+Show that the workbench can install, store memory, and recover context in a new Claude Code session.
 
 ## Setup
 
@@ -26,7 +26,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/RenzoTakada/obsidian-ai-work
 claude-brain
 ```
 
-3. Ask the agent to save a small memory entry.
+3. Ask Claude to save a small memory entry.
 
 ```text
 Save this to memory: I prefer concise answers and I am testing the Demo Notes project.
@@ -46,7 +46,7 @@ claude-brain
 /brain
 ```
 
-Expected result: the agent summarizes the stored preference and the active demo project without asking for the context again.
+Expected result: Claude summarizes the stored preference and the active demo project without asking for the context again.
 
 ## Suggested asciinema command
 

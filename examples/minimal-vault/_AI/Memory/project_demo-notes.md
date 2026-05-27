@@ -8,7 +8,7 @@ status: active
 
 ## Goal
 
-Demonstrate how a terminal AI agent can persist and recover context across sessions inside an Obsidian vault.
+Demonstrate how Claude Code can persist and recover context across sessions inside an Obsidian vault.
 
 ## Current state
 

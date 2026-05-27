@@ -36,7 +36,7 @@ Here you read, process, reflect, and write with your own words. The AI does not 
 
 ## Flow 2 — The AI Workbench (where the AI works)
 
-This is the AI's space. A dedicated folder inside your vault.
+This is Claude Code's space. A dedicated folder inside your vault.
 
 Here the AI has full autonomy to create, edit, organize, and delete. No permission needed.
 
@@ -55,7 +55,7 @@ Outside this folder, the AI must ask first.
 **Folder structure:**
 
 ```
-_Claude/          (or _Codex/, _OpenClaw/)
+_AI/
   Memory/         ← durable context across sessions
   Sessions/       ← what happened in each session
   Outputs/        ← deliverables for human review
@@ -70,7 +70,7 @@ _Claude/          (or _Codex/, _OpenClaw/)
   Inbox/          ← unprocessed input
 ```
 
-**The AI's rule here:**
+**Claude's rule here:**
 Full autonomy inside this folder. Ask first for everything outside.
 
 ---

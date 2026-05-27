@@ -13,7 +13,7 @@ Keep all AI-generated drafts, memory, sessions, and logs inside `_AI/`.
 
 ## Alternatives considered
 
-- Let the agent write anywhere in the vault.
+- Let Claude write anywhere in the vault.
 - Keep all context only in chat history.
 
 ## Consequences

@@ -1,12 +1,12 @@
 # Optional Obsidian MCP
 
-The workbench does not require MCP. It works with plain files. MCP can be added when you want richer access to Obsidian from compatible agents.
+The workbench does not require MCP. It works with plain files. MCP can be added when you want richer access to Obsidian from Claude Code.
 
 ## Options
 
 ### Filesystem MCP
 
-Use this when you want the agent to read and write Markdown files through a constrained filesystem server.
+Use this when you want Claude to read and write Markdown files through a constrained filesystem server.
 
 Recommended boundary:
 
@@ -16,7 +16,7 @@ Recommended boundary:
 
 ### Obsidian Local REST API
 
-Use this when you want agent workflows to interact with Obsidian through the Local REST API plugin.
+Use this when you want Claude workflows to interact with Obsidian through the Local REST API plugin.
 
 Recommended boundary:
 
