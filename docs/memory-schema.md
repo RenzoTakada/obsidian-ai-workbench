@@ -61,6 +61,25 @@ Suggested fields:
 - Current high-level projects
 - Boundaries and safety preferences
 
+## hot.md
+
+Purpose: short-lived working context for the next session.
+
+Use for:
+
+- Active focus
+- Recent decisions
+- Current blockers
+- Next actions
+- Last updated date
+
+Rules:
+
+- Keep it short.
+- Update at the end of meaningful sessions.
+- Do not use it as durable memory.
+- Move stable facts into focused memory files when they become important long-term context.
+
 ## project_*.md
 
 Purpose: durable context for one project.
@@ -148,5 +167,6 @@ When in doubt, write to `Outputs/` first. Promote to memory only after review.
 - `feedback_<topic>.md`
 - `user_profile.md`
 - `project_vault_setup.md`
+- `hot.md`
 
 Use lowercase, hyphenated or underscored names. Avoid spaces for portability.

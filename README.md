@@ -81,6 +81,8 @@ This forces the agent to silently load the memory before responding. You never h
 The workbench also ships with reusable behavior rules for agents:
 
 - Session-start phrases such as "ready", "start", "load context", "pronto", and "inicia" refresh memory, sessions, inbox, and briefings.
+- Command intents such as `/brain`, `/context`, `/save`, `/review-memory`, and `/spec` standardize common workflows.
+- `Memory/hot.md` keeps short-lived context for the next session.
 - Larger changes use a spec-first workflow: context, spec, validation, implementation, review.
 - Information has explicit destinations: memory, sessions, outputs, specs, decisions, logs, inbox, briefings, and archive.
 
@@ -179,8 +181,11 @@ YourVault/
     CLAUDE.md (or AGENTS.md)     ← config with memory auto-bootstrap
     Memory/
       MEMORY.md                  ← memory index (pre-filled)
+      hot.md                     ← short-lived context for the next session
       user_profile.md            ← your name, projects, preferences
       project_vault_setup.md     ← vault paths and structure
+    Commands/                    ← command intent documentation
+    .claude/commands/            ← Claude Code slash command prompts
     Sessions/                    ← notes from each session
     Outputs/                     ← AI-generated drafts and deliverables
     Specs/                       ← plans and specifications
@@ -255,7 +260,7 @@ A visual demo can be recorded from the script in [`docs/demo-script.md`](docs/de
 
 ## Example vault
 
-See [`examples/minimal-vault`](examples/minimal-vault) for a small anonymized workbench with memory, one decision, one session, and one output.
+See [`examples/demo-vault`](examples/demo-vault) for an anonymized workbench with memory, hot context, command prompts, a decision, a spec, a session, an output, a memory graph, and an Obsidian canvas.
 
 ---
 
@@ -268,10 +273,13 @@ If you want Claude, Codex, and OpenClaw working in the same vault — each in th
 ## Documentation
 
 - [How it works — three flows](docs/system.md)
+- [Workbench commands](docs/commands.md)
 - [Agent behavior contract](docs/agent-behavior.md)
 - [Spec-first workflow](docs/spec-first-workflow.md)
 - [Information routing](docs/information-routing.md)
 - [Memory schema](docs/memory-schema.md)
+- [Optional Obsidian MCP](docs/mcp-obsidian.md)
+- [Workbench lint](docs/lint-workbench.md)
 - [Demo script](docs/demo-script.md)
 - [Claude Code setup](docs/claude-code.md)
 - [Codex setup](docs/codex.md)

@@ -14,6 +14,8 @@ This folder is the AI's workbench inside the Obsidian vault.
 - `Outputs/` — drafts and deliverables.
 - `Logs/` — operational logs.
 - `Memory/` — durable AI memory.
+- `Memory/hot.md` — short-lived context for the next session.
+- `Commands/` — reusable command intent documentation.
 - `Sessions/` — chronological session notes.
 - `Projects/` — AI-managed project workspaces.
 - `Specs/` — plans, PRDs, specs.
@@ -26,6 +28,7 @@ This folder is the AI's workbench inside the Obsidian vault.
 ## Default operating workflow
 
 - Load memory before acting.
+- Load `Memory/hot.md` when present.
 - Keep generated work inside `_AI/` unless the human explicitly authorizes otherwise.
 - Use spec-first for larger changes: context, spec, validation, implementation, review.
 - Route unclear information to `Outputs/` first, then promote it to memory only after review.

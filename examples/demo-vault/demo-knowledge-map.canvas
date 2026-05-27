@@ -1,0 +1,79 @@
+{
+  "nodes": [
+    {
+      "id": "memory",
+      "type": "file",
+      "file": "_AI/Memory/MEMORY.md",
+      "x": -520,
+      "y": -80,
+      "width": 260,
+      "height": 120
+    },
+    {
+      "id": "hot",
+      "type": "file",
+      "file": "_AI/Memory/hot.md",
+      "x": -180,
+      "y": -220,
+      "width": 260,
+      "height": 120
+    },
+    {
+      "id": "project",
+      "type": "file",
+      "file": "_AI/Memory/project_demo-notes.md",
+      "x": -180,
+      "y": 80,
+      "width": 260,
+      "height": 120
+    },
+    {
+      "id": "spec",
+      "type": "file",
+      "file": "_AI/Specs/spec_demo-context-recovery.md",
+      "x": 180,
+      "y": -80,
+      "width": 280,
+      "height": 120
+    },
+    {
+      "id": "output",
+      "type": "file",
+      "file": "_AI/Outputs/context-summary.md",
+      "x": 540,
+      "y": -80,
+      "width": 280,
+      "height": 120
+    }
+  ],
+  "edges": [
+    {
+      "id": "memory-hot",
+      "fromNode": "memory",
+      "fromSide": "right",
+      "toNode": "hot",
+      "toSide": "left"
+    },
+    {
+      "id": "memory-project",
+      "fromNode": "memory",
+      "fromSide": "right",
+      "toNode": "project",
+      "toSide": "left"
+    },
+    {
+      "id": "project-spec",
+      "fromNode": "project",
+      "fromSide": "right",
+      "toNode": "spec",
+      "toSide": "left"
+    },
+    {
+      "id": "spec-output",
+      "fromNode": "spec",
+      "fromSide": "right",
+      "toNode": "output",
+      "toSide": "left"
+    }
+  ]
+}

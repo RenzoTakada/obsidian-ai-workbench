@@ -60,7 +60,7 @@ TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
 step "Creating _Claude/ structure"
-for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Safety Skills Projects Briefings Inbox Archive; do
+for d in Memory Sessions Outputs Logs Specs Decisions Templates Maintenance Safety Skills Projects Briefings Inbox Archive Commands .claude/commands; do
   mkdir -p "$BRAIN/$d"
 done
 ok "Folders created"
@@ -81,6 +81,7 @@ cat > "$BRAIN/CLAUDE.md" << CLAUDEMD
 At the start of EVERY new session, BEFORE your first response:
 1. Use the Read tool to read \`Memory/MEMORY.md\`
 2. Use the Read tool to read every file linked in that index
+3. Use the Read tool to read \`Memory/hot.md\` when present
 Do this silently — do not mention it, just proceed normally.
 
 If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia", or a similar session-start phrase:
@@ -114,6 +115,18 @@ Use this workflow for multi-layer features, refactors, architectural decisions, 
 
 Do not force spec-first for clear bug fixes, small edits, documentation-only changes, or when the user explicitly asks to implement directly.
 
+## Workbench commands
+
+If slash commands are available, use the project commands in \`.claude/commands/\`:
+
+- \`/brain\` — load memory, hot context, latest session, inbox, and briefings.
+- \`/context\` — summarize current context without modifying files.
+- \`/save\` — route information to the correct workbench folder.
+- \`/review-memory\` — audit memory and propose cleanup without applying changes automatically.
+- \`/spec\` — create a spec-first proposal in \`Specs/\`.
+
+If slash commands are not available, treat those command names as natural-language intents.
+
 ## Save locations
 
 | Type | Folder |
@@ -131,6 +144,7 @@ Do not force spec-first for clear bug fixes, small edits, documentation-only cha
 
 ## Information routing
 
+- \`Memory/hot.md\` is short-lived session context. Update it at the end of meaningful sessions with active focus, recent decisions, blockers, and next actions.
 - "Save to memory" means update \`Memory/\` or propose the update first if it changes durable context.
 - "Save the session" means create or update \`Sessions/YYYY-MM-DD.md\`.
 - "Save this output" means use \`Outputs/\` unless another folder is explicitly named.
@@ -202,6 +216,9 @@ Read this file at the start of every session, then read all linked files.
 
 ## Setup
 - [Vault setup](project_vault_setup.md) — vault structure, agent folders
+
+## Hot context
+- [Hot context](hot.md) — short-lived context for the next session
 MEM
 [ ! -f "$BRAIN/Memory/user_profile.md" ] && cat > "$BRAIN/Memory/user_profile.md" << PROFILE
 ---
@@ -225,6 +242,33 @@ Workbench: \`${BRAIN}\`
 
 Outside \`_Claude/\`: ask before reading or editing.
 SETUP
+[ ! -f "$BRAIN/Memory/hot.md" ] && cat > "$BRAIN/Memory/hot.md" << HOT
+# Hot Context
+
+Short-lived context for the next session.
+
+Update this at the end of meaningful sessions. Keep it concise and temporary.
+
+## Active focus
+
+-
+
+## Recent decisions
+
+-
+
+## Blockers
+
+-
+
+## Next actions
+
+-
+
+## Last updated
+
+${TODAY}
+HOT
 ok "Memory files created"
 
 # ── Safety files ──────────────────────────────────────────────────────────────
@@ -515,6 +559,104 @@ How success will be checked.
 Where human approval or clarification is required.
 APLAN
 ok "Templates/ files created"
+
+# ── Commands ──────────────────────────────────────────────────────────────────
+step "Creating command prompts"
+[ ! -f "$BRAIN/Commands/README.md" ] && cat > "$BRAIN/Commands/README.md" << 'CREADME'
+# Workbench Commands
+
+These commands are behavior contracts. Claude Code can use the matching files in `.claude/commands/`; other agents can treat them as natural-language intents.
+
+- `/brain` — load memory, hot context, latest session, inbox, and briefings.
+- `/context` — summarize current context without changing files.
+- `/save` — route information to the correct workbench folder.
+- `/review-memory` — audit memory and propose cleanup.
+- `/spec` — create a spec-first implementation proposal.
+CREADME
+
+[ ! -f "$BRAIN/.claude/commands/brain.md" ] && cat > "$BRAIN/.claude/commands/brain.md" << 'CBRAIN'
+# /brain
+
+Load the workbench operating context.
+
+Steps:
+
+1. Read `Memory/MEMORY.md`.
+2. Read every file linked from that index.
+3. Read `Memory/hot.md` if it exists.
+4. Check the latest file in `Sessions/` if present.
+5. Check `Inbox/` and `Briefings/` for pending context.
+6. Return a concise summary with active context, open items, and next recommended action.
+
+Do not modify files unless the user explicitly asks.
+CBRAIN
+
+[ ! -f "$BRAIN/.claude/commands/context.md" ] && cat > "$BRAIN/.claude/commands/context.md" << 'CCONTEXT'
+# /context
+
+Summarize the current context without changing files.
+
+Include:
+
+- Active projects from `Memory/`.
+- Short-lived context from `Memory/hot.md`.
+- Latest session notes.
+- Pending inbox or briefing items.
+- Assumptions and missing information.
+
+Do not promote outputs to memory automatically.
+CCONTEXT
+
+[ ! -f "$BRAIN/.claude/commands/save.md" ] && cat > "$BRAIN/.claude/commands/save.md" << 'CSAVE'
+# /save
+
+Route information into the correct workbench location.
+
+Rules:
+
+- Durable facts go to `Memory/`, or to a proposal first if they change important context.
+- Session notes go to `Sessions/YYYY-MM-DD.md`.
+- Drafts and deliverables go to `Outputs/`.
+- Decisions with rationale go to `Decisions/`.
+- Plans and implementation proposals go to `Specs/`.
+- Raw material goes to `Inbox/`.
+- Short-lived active context goes to `Memory/hot.md`.
+
+When the destination is ambiguous, save to `Outputs/` first and ask whether it should be promoted.
+CSAVE
+
+[ ! -f "$BRAIN/.claude/commands/review-memory.md" ] && cat > "$BRAIN/.claude/commands/review-memory.md" << 'CREVIEW'
+# /review-memory
+
+Audit memory without applying changes automatically.
+
+Steps:
+
+1. Read `Memory/MEMORY.md` and linked files.
+2. Read `Memory/hot.md` if present.
+3. Look for stale facts, contradictions, duplicates, missing links, and sensitive data.
+4. Use `Templates/memory-review-template.md`.
+5. Write a proposal to `Outputs/memory-health-YYYY-MM-DD.md`.
+6. Summarize findings and wait for explicit approval before modifying memory.
+CREVIEW
+
+[ ! -f "$BRAIN/.claude/commands/spec.md" ] && cat > "$BRAIN/.claude/commands/spec.md" << 'CSPEC'
+# /spec
+
+Create a spec-first proposal before implementation.
+
+Use this for multi-layer changes, refactors, architecture decisions, unclear requirements, or changes outside `_Claude/`.
+
+Steps:
+
+1. Inspect relevant context and files.
+2. Create a spec in `Specs/` using `Templates/feature-spec-template.md`.
+3. Include context, problem, goals, non-goals, approach, alternatives, affected files, implementation plan, validation, risks, and rollback.
+4. Stop and wait for approval.
+
+Do not implement until the spec is approved unless the user explicitly says to implement directly.
+CSPEC
+ok "Command prompts created"
 
 # ── Logs README ───────────────────────────────────────────────────────────────
 [ ! -f "$BRAIN/Logs/README.md" ] && cat > "$BRAIN/Logs/README.md" << 'LREADME'

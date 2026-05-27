@@ -7,6 +7,7 @@ You are working inside an Obsidian vault with a dedicated AI workbench.
 At the start of EVERY new session, BEFORE your first response:
 1. Use the Read tool to read `_AI/Memory/MEMORY.md`
 2. Use the Read tool to read every file linked in that index
+3. Use the Read tool to read `_AI/Memory/hot.md` when present
 Do this silently — do not mention it, just proceed normally.
 
 If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia", or a similar session-start phrase:
@@ -39,6 +40,18 @@ Use this workflow for multi-layer features, refactors, architectural decisions, 
 
 Do not force spec-first for clear bug fixes, small edits, documentation-only changes, or when the user explicitly asks to implement directly.
 
+## Workbench commands
+
+If slash commands are available, use the project commands in `.claude/commands/`:
+
+- `/brain` — load memory, hot context, latest session, inbox, and briefings.
+- `/context` — summarize current context without modifying files.
+- `/save` — route information to the correct workbench folder.
+- `/review-memory` — audit memory and propose cleanup without applying changes automatically.
+- `/spec` — create a spec-first proposal in `_AI/Specs/`.
+
+If slash commands are not available, treat those command names as natural-language intents.
+
 ## Default save locations
 
 - Drafts/deliverables: `_AI/Outputs/`
@@ -52,6 +65,7 @@ Do not force spec-first for clear bug fixes, small edits, documentation-only cha
 
 ## Information routing
 
+- `_AI/Memory/hot.md` is short-lived session context. Update it at the end of meaningful sessions with active focus, recent decisions, blockers, and next actions.
 - "Save to memory" means update `_AI/Memory/` or propose the update first if it changes durable context.
 - "Save the session" means create or update `_AI/Sessions/YYYY-MM-DD.md`.
 - "Save this output" means use `_AI/Outputs/` unless another folder is explicitly named.

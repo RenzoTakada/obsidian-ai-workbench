@@ -81,6 +81,8 @@ Isso força o agente a carregar a memória silenciosamente antes de responder. V
 O workbench também vem com regras reutilizáveis de comportamento para os agentes:
 
 - Frases de início como "ready", "start", "load context", "pronto" e "inicia" recarregam memória, sessões, inbox e briefings.
+- Intenções de comando como `/brain`, `/context`, `/save`, `/review-memory` e `/spec` padronizam fluxos comuns.
+- `Memory/hot.md` guarda contexto de curto prazo para a próxima sessão.
 - Mudanças maiores seguem spec-first: contexto, especificação, validação, implementação e revisão.
 - Cada tipo de informação tem destino explícito: memória, sessões, outputs, specs, decisões, logs, inbox, briefings e archive.
 
@@ -179,8 +181,11 @@ SeuVault/
     CLAUDE.md (ou AGENTS.md)     ← configuração com auto-bootstrap de memória
     Memory/
       MEMORY.md                  ← índice de memória (pré-preenchido)
+      hot.md                     ← contexto de curto prazo para a próxima sessão
       user_profile.md            ← seu nome, projetos, preferências
       project_vault_setup.md     ← caminhos e estrutura do vault
+    Commands/                    ← documentação das intenções de comando
+    .claude/commands/            ← prompts de slash command do Claude Code
     Sessions/                    ← notas de cada sessão
     Outputs/                     ← rascunhos e entregáveis da IA
     Specs/                       ← planos e especificações
@@ -255,7 +260,7 @@ Uma demo visual pode ser gravada a partir do roteiro em [`docs/demo-script.md`](
 
 ## Vault de exemplo
 
-Veja [`examples/minimal-vault`](examples/minimal-vault) para um workbench pequeno e anonimizado com memória, uma decisão, uma sessão e um output.
+Veja [`examples/demo-vault`](examples/demo-vault) para um workbench anonimizado com memória, hot context, comandos, uma decisão, uma spec, uma sessão, um output, um grafo de memória e um canvas do Obsidian.
 
 ---
 
@@ -268,10 +273,13 @@ Se você quer Claude, Codex e OpenClaw trabalhando no mesmo vault — cada um na
 ## Documentação
 
 - [Como funciona — três fluxos](docs/system.md)
+- [Comandos do workbench](docs/commands.md)
 - [Contrato de comportamento do agente](docs/agent-behavior.md)
 - [Workflow spec-first](docs/spec-first-workflow.md)
 - [Roteamento de informações](docs/information-routing.md)
 - [Schema de memória](docs/memory-schema.md)
+- [MCP opcional com Obsidian](docs/mcp-obsidian.md)
+- [Lint do workbench](docs/lint-workbench.md)
 - [Roteiro de demo](docs/demo-script.md)
 - [Setup Claude Code](docs/claude-code.md)
 - [Setup Codex](docs/codex.md)

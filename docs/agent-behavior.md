@@ -8,6 +8,7 @@ At the start of every session, before the first response, the agent should silen
 
 1. `_AI/Memory/MEMORY.md`
 2. Every file linked from that memory index
+3. `_AI/Memory/hot.md`, when present
 
 When the user says a session-start phrase such as "ready", "start", "load context", "bom dia", "pronto", or "inicia", the agent should refresh context:
 
@@ -33,3 +34,13 @@ The agent acts as a librarian, reviewer, researcher, planner, and implementation
 - Secrets, tokens, credentials, and private keys must never be committed or copied into memory.
 - Memory changes should be proposed first when they alter durable context.
 - Relevant actions should be logged in `_AI/Logs/`.
+
+## Command intents
+
+Agents should recognize these command intents when available:
+
+- `/brain` loads workbench context.
+- `/context` summarizes context without writes.
+- `/save` routes information to the right folder.
+- `/review-memory` creates a memory health proposal.
+- `/spec` creates a spec-first proposal before implementation.

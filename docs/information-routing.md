@@ -7,6 +7,7 @@ The workbench separates raw material, drafts, durable memory, decisions, and log
 | Information | Default location |
 |---|---|
 | Durable facts about the user, preferences, or active projects | `_AI/Memory/` |
+| Short-lived active context for the next session | `_AI/Memory/hot.md` |
 | Raw material to process later | `_AI/Inbox/` |
 | Drafts, summaries, analysis, and deliverables | `_AI/Outputs/` |
 | Session timeline and working notes | `_AI/Sessions/YYYY-MM-DD.md` |
@@ -19,6 +20,7 @@ The workbench separates raw material, drafts, durable memory, decisions, and log
 ## Command interpretation
 
 - "Save to memory" means update `_AI/Memory/` or propose the change first if it affects durable context.
+- "Save hot context" means update `_AI/Memory/hot.md` with active focus, blockers, recent decisions, and next actions.
 - "Save the session" means create or update `_AI/Sessions/YYYY-MM-DD.md`.
 - "Save this" without a clear destination should go to `_AI/Outputs/` first.
 - "Document this decision" means create an entry in `_AI/Decisions/`.

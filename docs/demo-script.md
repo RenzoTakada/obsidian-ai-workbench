@@ -43,7 +43,7 @@ claude-brain
 6. Ask for context recovery.
 
 ```text
-ready
+/brain
 ```
 
 Expected result: the agent summarizes the stored preference and the active demo project without asking for the context again.
