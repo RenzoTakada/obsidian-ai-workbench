@@ -1,47 +1,25 @@
 # Memory Cleanup Checklist
 
-## Recommended frequency
-
+## Frequency
 - [ ] Light review — weekly
 - [ ] Full review — monthly
-- [ ] Mandatory review after major projects
-- [ ] Mandatory review after significant context changes
-- [ ] Mandatory review before publishing or committing repository changes
-
----
+- [ ] After major projects
+- [ ] After significant context changes
 
 ## Checklist
-
-### Main memory
-- [ ] Review `_AI/Memory/MEMORY.md` — is it concise and current?
-- [ ] Review all files linked in the index
-- [ ] Look for duplicate information between files
-- [ ] Look for contradictory information
-- [ ] Look for sensitive data (tokens, passwords, private paths)
-
-### Relevance
+- [ ] Review Memory/MEMORY.md — concise and current?
+- [ ] Review all linked files
+- [ ] Look for duplicates
+- [ ] Look for contradictions
+- [ ] Look for sensitive data
 - [ ] Are closed projects still in active context?
-- [ ] Have old decisions been replaced by newer ones?
-- [ ] Do old prompts and instructions still work?
-- [ ] Are there oversized files that should be summarized?
+- [ ] Have old decisions been replaced?
+- [ ] Files that should be archived?
+- [ ] Files that should be summarized?
 
-### Organization
-- [ ] Separate active context from archivable context
-- [ ] Notes that should become separate files?
-- [ ] Files that should load on demand (not in bootstrap)?
-- [ ] Memories that should become documented decisions in `Decisions/`?
-
-### Security
-- [ ] Is there sensitive data that should not be saved?
-- [ ] Is there content that should not be versioned in Git?
-
----
-
-## Cleanup process (never automatic)
-
-1. Run the review using the template in `_AI/Templates/memory-review-template.md`
-2. Generate a cleanup proposal in `_AI/Outputs/memory-cleanup-YYYY-MM-DD.md`
-3. Wait for explicit user confirmation
+## Process (never automatic)
+1. Use template: Templates/memory-review-template.md
+2. Generate proposal: Outputs/memory-cleanup-YYYY-MM-DD.md
+3. Wait for explicit confirmation
 4. Apply approved changes
-5. Log the review in `_AI/Logs/`
-6. Update relevant decisions in `_AI/Decisions/`
+5. Log in Logs/

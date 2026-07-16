@@ -6,8 +6,20 @@
 # Sets up _AI/ inside your Obsidian vault with:
 #   - Auto-bootstrapping CLAUDE.md (memory loads before first response)
 #   - Pre-filled Memory/ files from your answers
-#   - claude-brain command
+#   - A terminal shortcut command (default: claude-<vault-name>)
 #   - Ollama embeddings (if available)
+#
+# Interactive by default. For scripted/agent-driven installs, pass flags:
+#   --vault=PATH        vault directory (skips auto-detection)
+#   --name=NAME          your name
+#   --projects=CSV       main projects, comma-separated
+#   --lang=LOCALE         pt-BR or en-US
+#   --shortcut=NAME        terminal command name (default: claude-<vault-folder-name>)
+#   -y, --yes              accept defaults for anything not passed as a flag
+#   -h, --help              show this help and exit
+#
+# Example (fully non-interactive):
+#   ./install-claude.sh --vault=/path/to/Vault --name="Renzo" --lang=pt-BR --yes
 # =============================================================================
 set -euo pipefail
 
@@ -19,6 +31,27 @@ ok()      { echo -e "  ${GREEN}✓${NC} $1"; }
 warn()    { echo -e "  ${YELLOW}⚠${NC}  $1"; }
 fail()    { echo -e "  ${RED}✗${NC} $1"; exit 1; }
 ask()     { echo -e "\n${BOLD}$1${NC}"; }
+
+usage() {
+  sed -n '2,19p' "$0" | sed 's/^# \{0,1\}//'
+}
+
+# ── Flags ─────────────────────────────────────────────────────────────────────
+VAULT_ARG=""; NAME_ARG=""; PROJECTS_ARG=""; LANG_ARG=""; SHORTCUT_ARG=""
+ASSUME_YES=false
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --vault=*)     VAULT_ARG="${1#*=}" ;;
+    --name=*)      NAME_ARG="${1#*=}" ;;
+    --projects=*)  PROJECTS_ARG="${1#*=}" ;;
+    --lang=*)      LANG_ARG="${1#*=}" ;;
+    --shortcut=*)  SHORTCUT_ARG="${1#*=}" ;;
+    -y|--yes)      ASSUME_YES=true ;;
+    -h|--help)     usage; exit 0 ;;
+    *) fail "Unknown option: $1 (use --help)" ;;
+  esac
+  shift
+done
 
 echo ""
 echo -e "${BOLD}Claude Code — AI Workbench Installer${NC}"
@@ -34,17 +67,24 @@ $OLLAMA && ok "ollama found" || warn "ollama not found — optional (https://oll
 
 # ── Vault detection ───────────────────────────────────────────────────────────
 step "Locating Obsidian vault"
-DETECTED=""
-for p in "$HOME/Documents/IABrain" "$HOME/Documents/Obsidian" "$HOME/Obsidian" "$HOME/vault"; do
-  [ -d "$p/.obsidian" ] && DETECTED="$p" && break
-done
-
-if [ -n "$DETECTED" ]; then
-  echo -e "  Found: ${BOLD}$DETECTED${NC}"
-  read -rp "  Use this? [Y/n] " c; [[ "$c" =~ ^[Nn] ]] && DETECTED=""
-fi
+DETECTED="$VAULT_ARG"
 if [ -z "$DETECTED" ]; then
-  ask "Vault path:"; read -rp "  > " DETECTED; DETECTED="${DETECTED/#\~/$HOME}"
+  for p in "$HOME/Documents/IABrain" "$HOME/Documents/Obsidian" "$HOME/Obsidian" "$HOME/vault"; do
+    [ -d "$p/.obsidian" ] && DETECTED="$p" && break
+  done
+
+  if [ -n "$DETECTED" ]; then
+    echo -e "  Found: ${BOLD}$DETECTED${NC}"
+    if $ASSUME_YES; then
+      ok "auto-confirmed via --yes"
+    else
+      read -rp "  Use this? [Y/n] " c; [[ "$c" =~ ^[Nn] ]] && DETECTED=""
+    fi
+  fi
+  if [ -z "$DETECTED" ]; then
+    $ASSUME_YES && fail "No vault auto-detected — pass --vault=PATH with --yes"
+    ask "Vault path:"; read -rp "  > " DETECTED; DETECTED="${DETECTED/#\~/$HOME}"
+  fi
 fi
 [ -d "$DETECTED" ] || fail "Not found: $DETECTED"
 VAULT="$DETECTED"; BRAIN="$VAULT/_AI"
@@ -52,9 +92,18 @@ ok "Vault: $VAULT"
 
 # ── Wizard ────────────────────────────────────────────────────────────────────
 step "Setup wizard"
-ask "Your name:"; read -rp "  > " NAME; NAME="${NAME:-User}"
-ask "Main projects (e.g. 'ProjectA, ProjectB'):"; read -rp "  > " PROJECTS
-ask "Language for Claude [pt-BR/en-US]:"; read -rp "  > " LANG; LANG="${LANG:-en-US}"
+NAME="$NAME_ARG"
+if [ -z "$NAME" ]; then
+  if $ASSUME_YES; then NAME="User"; else ask "Your name:"; read -rp "  > " NAME; NAME="${NAME:-User}"; fi
+fi
+PROJECTS="$PROJECTS_ARG"
+if [ -z "$PROJECTS" ] && ! $ASSUME_YES; then
+  ask "Main projects (e.g. 'ProjectA, ProjectB'):"; read -rp "  > " PROJECTS
+fi
+LANG="$LANG_ARG"
+if [ -z "$LANG" ]; then
+  if $ASSUME_YES; then LANG="en-US"; else ask "Language for Claude [pt-BR/en-US]:"; read -rp "  > " LANG; LANG="${LANG:-en-US}"; fi
+fi
 TODAY=$(date +%Y-%m-%d)
 
 # ── Folders ───────────────────────────────────────────────────────────────────
@@ -837,15 +886,31 @@ No file is moved here automatically. All archiving requires a proposal in Output
 See: Maintenance/MEMORY_ARCHIVE_POLICY.md
 AREADME
 
-# ── claude-brain ──────────────────────────────────────────────────────────────
-step "Creating claude-brain command"
+# ── Terminal shortcut ─────────────────────────────────────────────────────────
+step "Creating terminal shortcut"
 BIN="$HOME/.local/bin"; mkdir -p "$BIN"
-if [ ! -f "$BIN/claude-brain" ]; then
-  printf '#!/usr/bin/env bash\ncd "%s"\nexec claude "$@"\n' "$BRAIN" > "$BIN/claude-brain"
-  chmod +x "$BIN/claude-brain"; ok "claude-brain → $BIN/claude-brain"
-  [[ ":$PATH:" != *":$BIN:"* ]] && echo "export PATH=\"\$PATH:$BIN\"" >> "$HOME/.zshrc" && warn "Added $BIN to PATH in ~/.zshrc — restart terminal"
+SLUG="$(basename "$VAULT" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')"
+DEFAULT_SHORTCUT="claude-${SLUG:-brain}"
+SHORTCUT="$SHORTCUT_ARG"
+if [ -z "$SHORTCUT" ]; then
+  if $ASSUME_YES; then
+    SHORTCUT="$DEFAULT_SHORTCUT"
+  else
+    ask "Terminal shortcut command name [$DEFAULT_SHORTCUT]:"; read -rp "  > " SHORTCUT
+    SHORTCUT="${SHORTCUT:-$DEFAULT_SHORTCUT}"
+  fi
+fi
+if [ -f "$BIN/$SHORTCUT" ]; then
+  if grep -qF "$BRAIN" "$BIN/$SHORTCUT" 2>/dev/null; then
+    ok "$SHORTCUT already points here — skipped"
+  else
+    warn "$SHORTCUT already exists and points to a different workbench — pick another name with --shortcut=NAME (skipped, no shortcut created)"
+  fi
 else
-  warn "claude-brain already exists — skipped"
+  printf '#!/usr/bin/env bash\nset -euo pipefail\ncd "%s"\nexec claude "$@"\n' "$BRAIN" > "$BIN/$SHORTCUT"
+  chmod 700 "$BIN/$SHORTCUT"
+  ok "$SHORTCUT → $BIN/$SHORTCUT"
+  [[ ":$PATH:" != *":$BIN:"* ]] && echo "export PATH=\"\$PATH:$BIN\"" >> "$HOME/.zshrc" && warn "Added $BIN to PATH in ~/.zshrc — restart terminal"
 fi
 
 # ── Ollama ────────────────────────────────────────────────────────────────────
@@ -854,8 +919,12 @@ if $OLLAMA; then
   if ollama list 2>/dev/null | grep -q "nomic-embed-text"; then
     ok "nomic-embed-text already installed"
   else
-    ask "Install nomic-embed-text for memory embeddings? (~274MB) [Y/n]"
-    read -rp "  > " r; [[ ! "$r" =~ ^[Nn] ]] && ollama pull nomic-embed-text && ok "nomic-embed-text installed"
+    if $ASSUME_YES; then
+      ollama pull nomic-embed-text && ok "nomic-embed-text installed"
+    else
+      ask "Install nomic-embed-text for memory embeddings? (~274MB) [Y/n]"
+      read -rp "  > " r; [[ ! "$r" =~ ^[Nn] ]] && ollama pull nomic-embed-text && ok "nomic-embed-text installed"
+    fi
   fi
 fi
 
@@ -863,7 +932,7 @@ fi
 echo ""
 echo -e "${GREEN}${BOLD}✓ Claude Code workbench ready!${NC}"
 echo ""
-echo -e "  Start: ${BOLD}claude-brain${NC}"
+echo -e "  Start: ${BOLD}${SHORTCUT:-$DEFAULT_SHORTCUT}${NC}"
 echo -e "  Or:    ${BOLD}cd ${BRAIN} && claude${NC}"
 echo ""
 echo "Claude will load your memory automatically before the first response."

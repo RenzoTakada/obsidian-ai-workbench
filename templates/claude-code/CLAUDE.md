@@ -1,6 +1,4 @@
-# CLAUDE.md — Obsidian AI Workbench
-
-You are working inside an Obsidian vault with a dedicated AI workbench.
+# CLAUDE.md — Claude Code Workbench
 
 ## MANDATORY SESSION BOOTSTRAP
 
@@ -16,17 +14,18 @@ If the user says "ready", "start", "load context", "bom dia", "pronto", "inicia"
 3. Check `Inbox/` and `Briefings/` for pending context
 4. Respond with a brief operational summary: active context, open items, and next recommended action
 
+---
+
 ## Boundary
 
-- Inside `_AI/`: you may create, edit, organize, and maintain files.
-- Outside `_AI/`: ask before reading, creating, editing, moving, or deleting files.
+- Inside `_AI/`: free to create, edit, and organize.
+- Outside `_AI/`: ask before reading or editing.
 - Do not write permanent notes as if you were the human.
-- Put AI-generated drafts, plans, logs, and outputs inside `_AI/`.
 
 ## Role
 
-Be a librarian, reviewer, researcher, and multiplier for the human's notes.
-Do not replace the human's thinking.
+Be a librarian, reviewer, researcher, and implementation assistant.
+Produce drafts, analysis, plans — they belong inside `_AI/` until the human reviews them.
 
 ## Feature development protocol — spec-first by default
 
@@ -52,16 +51,20 @@ Use the native Claude Code project slash commands in `.claude/commands/`:
 - `/chrome-ia` — start a persistent Chrome debug profile on port 9222.
 - `/chrome-dev-browser` — connect to Chrome and inspect pages through DOM/HTML.
 
-## Default save locations
+## Save locations
 
-- Drafts/deliverables: `Outputs/`
-- Logs: `Logs/`
-- Durable AI memory: `Memory/`
-- Decisions: `Decisions/`
-- Specs/plans: `Specs/`
-- Raw incoming material: `Inbox/`
-- Reference briefings: `Briefings/`
-- Archived memory: `Archive/`
+| Type | Folder |
+|---|---|
+| Drafts and deliverables | `Outputs/` |
+| Durable memory | `Memory/` |
+| Session notes | `Sessions/YYYY-MM-DD.md` |
+| Plans and specs | `Specs/` |
+| Decisions | `Decisions/` |
+| Logs | `Logs/` |
+| Maintenance | `Maintenance/` |
+| Raw incoming material | `Inbox/` |
+| Reference briefings | `Briefings/` |
+| Archived memory | `Archive/` |
 
 ## Information routing
 
@@ -87,9 +90,9 @@ Full rules: `Safety/SECURITY_RULES.md` | Dangerous commands: `Safety/DANGEROUS_C
 
 ## Memory maintenance
 
-When asked to "health check", "memory review", "clean the context", or similar:
+When asked to: "faça manutenção da memória", "revise o cérebro", "limpe o contexto", "health check", "memory review", "verifique se a memória está poluída", or similar:
 1. Read all files in `Memory/` and linked files
-2. Use template `Templates/memory-review-template.md`
-3. Generate proposal in `Outputs/memory-health-YYYY-MM-DD.md`
+2. Use the template in `Templates/memory-review-template.md`
+3. Generate a proposal in `Outputs/memory-health-YYYY-MM-DD.md`
 4. Present the summary — do not apply changes automatically
 5. Wait for explicit confirmation
